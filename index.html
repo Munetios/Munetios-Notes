@@ -1,9 +1,2924 @@
-<style>
-    * {
-    font-family: sans-serif;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Munetios Notes (legacy)</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+        body {
+            background-color: #f2f2f2;
+            color: #222;
+        }
+        body.dark {
+            background-color: #3a005a;
+            color: #f2f2f2;
+        }
+        body.dark .sidebar {
+            background-color: #3a005a;
+            border-right: 1px solid #a050e0;
+        }
+        body.dark header,
+        body.dark .topbar,
+        body.dark .top-right {
+            background-color: #3a005a;
+            color: #f2f2f2;
+        }
+        body.dark .bottom-side {
+            background-color: #3a005a;
+        }
+        body.dark .search-bar {
+            background-color: #4b1a6a;
+            color: #f2f2f2;
+        }
+        body.dark .btn {
+            background-color: #a050e0;
+            color: #fff;
+        }
+        body.dark .content{
+            background-color: #3a005a;
+            color: #f2f2f2;
+        }
+        body.dark .btn:hover {
+            background-color: #7a1fa2;
+        }
+        body.dark .note-item {
+            background: #2a003a !important;
+            color: #f2f2f2;
+        }
+        body.dark .note-item[style*="#e6e6ff"] {
+            background: #4b1a6a !important;
+        }
+        body.dark .modal-content {
+            background: #1a002a;
+            color: #f2f2f2;
+        }
+        body.dark .bottom-note {
+            background: #2a003a;
+            color: #fff;
+        }
+        body.dark ::-webkit-scrollbar-thumb {
+            background: #a050e0;
+        }
+        body.dark ::-webkit-scrollbar-track {
+            background: #2a003a;
+        }
+        body.dark ::-webkit-scrollbar-corner {
+            background: #1a002a;
+        }
+        body.dark .overflow-toolbar {
+            background: #3a005a;
+            color: #f2f2f2;
+            border-bottom: 1px solid #a050e0;
+        }
+        body.dark .menu-item {
+            color: #f2f2f2;
+            background: transparent !important;
+        }
+        body.dark .menu-item[data-action="delete"] {
+            color: #ff6b6b;
+        }
+        body.dark input,
+        body.dark select,
+        body.dark textarea {
+            background: #1a002a;
+            color: #f2f2f2;
+            border-color: #4b1a6a;
+        }
+        body.dark #noteMenu {
+            background: #1a002a !important;
+        }
+        body.dark .note-container{
+            background: #1a002a !important;
+        }
+        body.dark .font-size-input input {
+            background: #2a003a !important;
+            color: #f2f2f2;
+            border-color: #4b1a6a;
+        }
+        body.dark #noteArea {
+            background: #1a002a !important;
+            color: #ffffff !important;
+        }
+        body.dark .modal-content {
+            background: #1a002a !important;
+            color: #f2f2f2 !important;
+        }
+        body.dark .bottom-note {
+            background: #2a003a !important;
+            color: #fff !important;
+            border: 1px solid #4b1a6a;
+        }
+        body.dark .btn {
+            background-color: #a050e0 !important;
+            color: #fff !important;
+        }
+        body.dark .btn:hover {
+            background-color: #7a1fa2 !important;
+        }
+        body.dark .content > div[style*="background: #fff"] {
+            background: #1a002a !important;
+        }
+        body.dark .sidebar {
+            background-color: #3a005a !important;
+            border-right: 1px solid #a050e0 !important;
+        }
+        body.dark .topbar,
+        body.dark .top-right {
+            background-color: #3a005a !important;
+            color: #f2f2f2 !important;
+        }
+        body.dark .search-bar {
+            background-color: #4b1a6a !important;
+            color: #f2f2f2 !important;
+        }
+        body.dark .note-item {
+            background: #2a003a !important;
+            color: #f2f2f2 !important;
+        }
+        body.dark .note-item[style*="#e6e6ff"] {
+            background: #4b1a6a !important;
+        }
+        body.dark .bottom-side {
+            background-color: #3a005a !important;
+        }
+        body.dark .bottom-side .btn {
+            background: transparent !important;
+            color: #f2f2f2 !important;
+            border: 1px solid #4b1a6a !important;
+        }
+        body.dark .bottom-side .btn:hover {
+            background: #2a003a !important;
+        }
+        
+
+
+        /* Custom Scrollbar Styles */
+        ::-webkit-scrollbar {
+            width: 34px;
+            height: 34px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7bfff;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f2f2f2;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-corner {
+            background: #eaeaea;
+        }
+        /* Firefox */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #c7bfff #f2f2f2;
+        }
+
+        .sidebar {
+            position: fixed;
+            width: 260px;
+            padding: 15px;
+            background-color: aliceblue;
+            height: 100vh;
+            border-right: 1px solid #6d6d6d;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        .topbar {
+            /* margin-left removed to allow proper centering */
+            padding: 10px;
+            position: fixed;
+            left: 260px;
+            right: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f2f2f2;
+            z-index: 100;
+        }
+        .top-right  {
+            display: flex;
+            margin-left: auto;
+            gap: 10px;
+            align-items: center;
+            position: fixed;
+            right: 13px;
+            top: 7px;
+            background-color: #f2f2f2;
+        }
+        .menu-btn {
+            display: none;
+            top: 16px;
+            position: fixed;
+        }
+        .bottom-side {
+            position: static;
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background-color: aliceblue;
+            border-top: 1px solid #ccc;
+            padding-top: 12px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        .bottom-side .btn {
+            background: transparent !important;
+            color: #333 !important;
+            border: 1px solid #e0e0e0;
+            box-shadow: none;
+        }
+        .bottom-side .btn:hover {
+            background: #f2f2f2 !important;
+        }
+        #notesList {
+            flex: 1 1 auto;
+            min-height: 70px;
+            max-height: calc(100vh - 340px); /* adjust as needed for header/search/bottom */
+            overflow-y: auto;
+            margin-bottom: 12px;
+        }
+       
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow-y: hidden;
+            position: relative;
+        }
+        .sidebar > #notesList {
+            flex: 1 1 auto;
+            overflow-y: auto;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .close {
+            background: none;
+            border: none;
+            font-size: 32px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .top-sidebar {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            align-items: center;
+            display: flex;
+            gap: 10px;
+        }
+
+        .top-sidebar #settingsIcon, #helpIcon {
+            display: none;
+        }
+
+        .noteText {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1 1 auto;
+            min-width: 0;
+            max-width: calc(100vw - 260px - 32px - 340px); /* sidebar + padding + top-right */
+        }
+        /* Ensure lists in note editor show bullets/numbers */
+        #noteArea ul {
+            list-style-type: disc !important;
+            margin-left: 2em;
+            padding-left: 1.5em;
+        }
+        #noteArea ol {
+            list-style-type: decimal !important;
+            margin-left: 2em;
+            padding-left: 1.5em;
+        }
+        #noteArea li {
+            display: list-item !important;
+        }
+        @media (max-width: 992px) {
+            .noteText {
+            max-width: calc(100vw - 120px - 180px); /* menu + top-right (approx) */
+            margin-left: 40px;
+            }
+            .topbar {
+                left: 0 !important;
+            }
+        }
+
+        .btn {
+            border-radius: 7px;
+            padding: 15px 20px;
+            border: none;
+            cursor: pointer;
+            background-color: #a50efc;
+            color: white;
+            display: flex;
+            white-space: nowrap;
+            align-items: center;
+            gap: 5px;
+        }
+        i {
+            font-size: 22px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #5f009a;
+        }
+        .top-side {
+            flex-wrap: nowrap;
+            display: flex;
+            gap: 5px;
+        }
+        .top-side .btn #addNote {
+            width: 100%;
+        }
+
+        /* Overflow toolbar styles */
+        .overflow-toolbar {
+            display: none;
+            flex-wrap: wrap;
+            align-items: center;
+            background: #f2f2f2;
+            border-bottom: 1px solid #eee;
+            z-index: 20;
+            padding: 8px 12px;
+            width: 100%;
+            box-sizing: border-box;
+            position: absolute;
+            top: -48px; /* Place above the toolbar editor */
+            left: 0;
+        }
+        .overflow-toolbar .item {
+            padding: 8px 12px;
+            border-right: 1px solid #eee;
+            white-space: nowrap;
+        }
+        .items-show-1177 {
+            display: none;
+        }
+        .items-show-1065 {
+            display: none;
+        }
+        .items-show-640 {
+            display: none;
+        }
+        .items-show-406 {
+            display: none;
+        }
+        .bottom-note {
+            position: absolute;
+            bottom: 30px;
+            left: 17px;
+            display: flex;
+            gap: 12px;
+            background: #f8f8ff;
+            border-radius: 8px;
+            padding: 8px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            z-index: 10;
+        }
+
+    @media (max-height: 412px) {
+        .bottom-side {
+            display: none !important;
+        }
+        .top-sidebar #settingsIcon, #helpIcon {
+            display: flex !important;
+        }
+        #notesList {
+            max-height: calc(100vh - 240px); /* adjust as needed for header/search/bottom */
+        }
+        .sidebar {
+            overflow-y: auto;
+        }
     }
-</style>
-<p>This Note app got deprecated please use <a href="https://notebook.munetios.com">Munetios Notebook</a>. New notes app is coming soon</p>
-<script>
-    console.log('Goodbye, That note app is depercated please use munetios notebook')
+
+        @media (max-width: 992px ) {
+            .bottom-note {
+                left: 12px;
+            }
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 12px;
+            background-color: rgb(244, 202, 255);
+            border-radius: 7px;
+            font-size: 18px;
+        }
+        .search-bar input {
+            border: none;
+            outline: none;
+            background-color: transparent !important;
+            font-size: 14px;
+        }
+
+
+        :root {
+            --sidebar-collapse-width: 992px;
+        }
+
+    
+
+        /* Modern browsers: use CSS variable for sidebar collapse width */
+        @media (max-width: 992px) {
+            .sidebar {
+                display: none;
+            }
+            .menu-btn {
+                display: block !important;
+            }
+            .noteText {
+                margin-left: 40px;
+            }
+            #noteArea {
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 8px !important;
+            }
+            #noteArea textarea {
+                margin-left: 0 !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                box-sizing: border-box !important;
+            }
+            .topbar {
+                margin-left: 0 !important;
+            }
+            .content > div[style*="position: fixed"] {
+                left: 0 !important;
+                padding-left: 8px !important;
+            }
+        }
+
+        @media (max-width: 1177px) {
+            .hide-1177 {
+                display: none;
+            }
+            .items-show-1177 {
+                display: flex !important;
+            }
+        }
+        @media (max-width: 1065px) {
+            .hide-1065 {
+                display: none;
+            }
+            .items-show-1065 {
+                display: flex !important;
+            }
+        }
+        @media (max-width: 640px) {
+            .hide-640 {
+                display: none;
+            }
+            .items-show-640 {
+                display: flex !important;
+            }
+        }
+        @media (max-width: 488px) {
+            .hide-488 {
+                display: none;
+            }
+        }
+        @media (max-width: 406px) {
+            .hide-406 {
+                display: none;
+            }
+            .items-show-406 {
+                display: flex !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <h2>Notes</h2> <div class="top-sidebar">
+            <i id="settingsIcon" class="ri-settings-2-line"></i> <i id="helpIcon" class="ri-question-line"></i>
+            <i id="collapseSSidebarIcon" class="ri-arrow-left-line"></i>
+        </div>
+        <div class="top-side">
+            <button style="width: 100% !important;" class="btn" id="addNote"> <i class="ri-add-line"></i> Add Note</button><button class="btn" id="importNote"><i class="ri-import-line"></i></button>
+        </div>
+        <br>
+        <div class="search-bar">
+            <input type="text" id="searchNotes" placeholder="Search Notes">
+        </div>
+        <br>
+        <h3>My Notes</h3>
+        <div id="notesList"></div>
+        <div class="bottom-side">
+            <button class="btn" id="settingsBtn"><i class="ri-settings-2-line"></i>Settings</button>
+            <button class="btn" id="helpBtn"><i class="ri-question-line"></i>Help</button>
+        </div>
+    </aside>
+    <main><header class="topbar">
+        <div style="display: flex; align-items: center; gap: 10px; flex: 1 1 auto;">
+            <div class="menu-btn">
+                <i class="ri-menu-line"></i>
+            </div>
+            <h1 class="noteText" id="noteText" style="flex: 1 1 auto; overflow: hidden;  text-overflow: ellipsis; white-space: nowrap;"></h1>
+        </div>
+        <div class="top-right">
+            <div class="item"> <i class="ri-history-line" id="versionHistory"></i></div>
+         <div class="item">
+            <i class="ri-palette-line" id="bgColor"></i>
+         </div>
+         <div class="item">
+            <i class="ri-image-line" id="insertImage"></i>
+         </div>
+         <button style="padding: 10px 15px !important; border-radius: 30px !important;"  class="btn" id="shareBtn">
+            <i class="ri-user-add-line"></i>
+            <span class="share-text">Share</span>
+         </button>
+         <div class="item">
+            <i class="ri-more-2-fill" id="moreBtn"></i>
+         </div>
+        </div>
+    </header>
+    <div class="content">
+        <div class="note-container" style="position: fixed; top: 55px; left: 260px; right: 0; bottom: 0; padding: 24px 32px 24px 32px; background: #fff;   overflow-y: auto;">
+            <div
+                id="noteArea"
+                name="noteArea"
+                contenteditable="true"
+                style="width: 100%;  position: fixed; height: 100%; overflow: auto; min-height: 400px; font-size: 18px; border: none; outline: none; background: transparent; color: #222; padding: 0; resize: none;"
+                placeholder="Start typing your note here..."></div>
+            <div class="bottom-note">
+                <i class="ri-bold" onclick="format('bold')"></i>
+                <i class="ri-italic" onclick="format('italic')"></i>
+                <i class="ri-underline" onclick="format('underline')"></i>
+                <span class="hide-488" style="border-left:1px solid #ddd;height:28px;margin:0 8px;"></span>
+                <div class="font-size-input hide-640">
+                    <i id="decreaseSize" class="ri-subtract-line"></i>
+                    <input
+                        style=" vertical-align: middle; width: 44px; text-align: center; font-size: 16px; border: none; background: #f3eaff; border-radius: 6px; margin: 0 4px; padding: 4px 0; box-shadow: 0 1px 2px rgba(165,14,252,0.07); outline: none; transition: box-shadow 0.2s;"
+                        type="number"
+                        id="fontSize"
+                        value="18"
+                        min="8"
+                        max="100"
+                        title="Font Size (px)"
+                        aria-label="Font Size"
+                    />
+                    <i id="addSize" class="ri-add-line"></i>
+                </div>
+                 <span class="hide-640" style="border-left:1px solid #ddd;height:28px;margin:0 8px;"></span>
+               
+                <i class="ri-list-unordered" onclick="format('insertUnorderedList')" title="Bulleted List"></i>
+                <i class="ri-list-ordered" onclick="format('insertOrderedList')" title="Numbered List"></i>
+                <i class="ri-align-left hide-406" onclick="format('justifyLeft')" title="Align Left"></i>
+                <i class="ri-align-center hide-406" onclick="format('justifyCenter')" title="Align Center"></i>
+                <i class="ri-align-right hide-406" onclick="format('justifyRight')" title="Align Right"></i>
+                <span class="hide-640" style="border-left:1px solid #ddd;height:28px;margin:0 8px;"></span>
+                <i class="ri-font-color" onclick="chooseTextColor()" title="Text Color"></i>
+                <span class="hide-488" style="border-left:1px solid #ddd;height:28px;margin:0 8px;"></span>
+                <i class="ri-arrow-left-right-line hide-1065" onclick="format('ltr')" title="Text Left-to-Right"></i>
+                <span style="width:8px;display:inline-block;"></span>
+                <i class="ri-arrow-right-line hide-1065" onclick="format('rtl')" title="Text Right-to-Left"></i>
+                <span class="hide-1065" style="border-left:1px solid #ddd;height:28px;margin:0 8px;"></span>
+                <i class="ri-superscript hide-1177" onclick="format('superscript')" title="Superscript"></i>
+                <i class="ri-subscript hide-1177" onclick="format('subscript')" title="Subscript"></i>
+                <i class="ri-strikethrough hide-1177" onclick="format('strikeThrough')" title="Strikethrough"></i>
+                <i class="ri-code-s-slash-line hide-1065" onclick="format('formatBlock', 'pre')" title="Code Block"></i>
+                <span class="hide-1065" style="border-left:1px solid #ddd;height:28px;margin:0 8px;"></span>
+                <l id="overflowToolbarMenu" class="ri-arrow-down-s-line" ></l>
+                <div class="overflow-toolbar">
+                    <div class="items-show-1177">
+                            <i class="ri-superscript" onclick="format('superscript')" title="Superscript"></i>
+                <i class="ri-subscript" onclick="format('subscript')" title="Subscript"></i>
+                <i class="ri-strikethrough" onclick="format('strikeThrough')" title="Strikethrough"></i>
+                    </div>
+               
+                <div class="items-show-1065">
+                    <i class="ri-arrow-right-line" onclick="format('rtl')" title="Text Right-to-Left"></i>
+                    <i class="ri-arrow-left-right-line" onclick="format('ltr')" title="Text Left-to-Right"></i>
+                    <i class="ri-code-s-slash-line" onclick="format('formatBlock', 'pre')" title="Code Block"></i>
+                </div> 
+            <div class="items-show-640">
+                <div class="font-size-input">
+                    <input style="width: 60px; padding: 4px; border: 1px solid #ddd; border-radius: 4px;" type="number" id="fontSize" value="18" max="72" min="1" onchange="changeFontSize()" />
+                </div>
+            </div>
+            <div class="items-show-406">
+                <i class="ri-align-left" onclick="format('justifyLeft')" title="Align Left"></i>
+                <i class="ri-align-center" onclick="format('justifyCenter')" title="Align Center"></i>
+                <i class="ri-align-right" onclick="format('justifyRight')" title="Align Right"></i>
+            </div>
+            </div>
+            </div>
+            </div>
+    </div>
+</main>
+<div class="modal" id="settingsModal">
+    <div class="modal-content">
+        <div class="close" id="closeModal">&times;</div>
+        <h2>Settings</h2>
+       <label for="theme">Theme:</label>
+       <select id="theme" onchange="changeTheme()">
+           <option value="light">Light</option>
+           <option value="dark">Dark</option>
+           <option value="system">System</option>
+       </select>    
+       <br>
+       <label for="language">Language:</label>
+       <select id="language" onchange="changeLanguage()">
+           <option value="en">English</option>
+           <option value="es">Spanish</option>
+           <option value="fr">French</option>
+           <option value="de">German</option>
+           <option value="zh">Chinese</option>
+           <option value="ru">Russian</option>
+           <option value="ja">Japanese</option>
+           <option value="ko">Korean</option>
+           <option value="pt">Portuguese</option>
+       </select>
+       <br>
+    </div>
+</div>
+<div class="modal" id="addNewNote">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h2>Add New Note</h2>
+       <input type="text" name="noteTitle" id="noteTitle" placeholder="Note title">
+       <br>
+       <button class="btn" id="saveNote">Save Note</button>
+    </div>
+</div>
+    <script>
+    /* --- Language Translations --- */
+    const translations = {
+        en: {
+            notes: "Notes",
+            addNote: "Add Note",
+            import: "Import",
+            searchNotes: "Search Notes",
+            myNotes: "My Notes",
+            settings: "Settings",
+            help: "Help",
+            share: "Share",
+            versionHistory: "Version History",
+            bgColor: "Background",
+            insertImage: "Insert Image",
+            rename: "Rename",
+            print: "Print",
+            delete: "Delete",
+            close: "Close",
+            save: "Save",
+            theme: "Theme:",
+            language: "Language:",
+            addNewNote: "Add New Note",
+            noteTitle: "Note title",
+            saveNote: "Save Note",
+            pleaseSelectNote: "Please select a note or create a note",
+            pleaseEnterTitle: "Please enter a note title.",
+            noteImported: "Note imported.",
+            sharedNoteImported: "Shared note imported.",
+            noteDeleted: "Note deleted.",
+            shareDialogOpened: "Share dialog opened.",
+            shareCancelled: "Share cancelled.",
+            shareLinkCopied: "Share link copied to clipboard.",
+            versionRestored: "Version restored.",
+            deleteConfirm: "Delete this note?",
+            restoreVersionConfirm: "Restore this version? This will overwrite the current note content.",
+            noNoteSelected: "No note selected.",
+            welcome: "Welcome to GAMERYT Notes!",
+            createNote: "Create a Note",
+            edit: "Edit",
+            search: "Search",
+            shareNote: "Share",
+            version: "Version History",
+            settings2: "Settings",
+            import2: "Import",
+            formatting: "Formatting",
+            sidebar: "Sidebar",
+            needHelp: "Need more help?",
+            noDocs: "No documentation is available yet.",
+            fontSize: "Font Size (px)",
+            pickTextColor: "Pick Text Color",
+            pickBgColor: "Pick Note Background",
+            renameNote: "Rename Note",
+            restore: "Restore This Version",
+            noHistory: "No history available.",
+            print2: "Print",
+            yes: "Yes",
+            no: "No",
+            close2: "Close",
+            addNote2: "Add Note",
+            startTyping: "Start typing your note here..."
+        },
+        es: {
+            notes: "Notas",
+            addNote: "Agregar Nota",
+            import: "Importar",
+            searchNotes: "Buscar Notas",
+            myNotes: "Mis Notas",
+            settings: "Configuración",
+            help: "Ayuda",
+            share: "Compartir",
+            versionHistory: "Historial de Versiones",
+            bgColor: "Fondo",
+            insertImage: "Insertar Imagen",
+            rename: "Renombrar",
+            print: "Imprimir",
+            delete: "Eliminar",
+            close: "Cerrar",
+            save: "Guardar",
+            theme: "Tema:",
+            language: "Idioma:",
+            addNewNote: "Agregar Nueva Nota",
+            noteTitle: "Título de la nota",
+            saveNote: "Guardar Nota",
+            pleaseSelectNote: "Por favor seleccione o cree una nota",
+            pleaseEnterTitle: "Por favor ingrese un título de nota.",
+            noteImported: "Nota importada.",
+            sharedNoteImported: "Nota compartida importada.",
+            noteDeleted: "Nota eliminada.",
+            shareDialogOpened: "Diálogo de compartir abierto.",
+            shareCancelled: "Compartir cancelado.",
+            shareLinkCopied: "Enlace copiado al portapapeles.",
+            versionRestored: "Versión restaurada.",
+            deleteConfirm: "¿Eliminar esta nota?",
+            restoreVersionConfirm: "¿Restaurar esta versión? Esto sobrescribirá el contenido actual.",
+            noNoteSelected: "Ninguna nota seleccionada.",
+            welcome: "¡Bienvenido a GAMERYT Notes!",
+            createNote: "Crear una Nota",
+            edit: "Editar",
+            search: "Buscar",
+            shareNote: "Compartir",
+            version: "Historial de Versiones",
+            settings2: "Configuración",
+            import2: "Importar",
+            formatting: "Formato",
+            sidebar: "Barra lateral",
+            needHelp: "¿Necesitas más ayuda?",
+            noDocs: "No hay documentación disponible todavía.",
+            fontSize: "Tamaño de fuente (px)",
+            pickTextColor: "Elegir color de texto",
+            pickBgColor: "Elegir fondo de nota",
+            renameNote: "Renombrar Nota",
+            restore: "Restaurar Esta Versión",
+            noHistory: "No hay historial disponible.",
+            print2: "Imprimir",
+            yes: "Sí",
+            no: "No",
+            close2: "Cerrar",
+            addNote2: "Agregar Nota",
+            startTyping: "Empieza a escribir tu nota aquí..."
+        },
+        fr: {
+            notes: "Notes",
+            addNote: "Ajouter une note",
+            import: "Importer",
+            searchNotes: "Rechercher des notes",
+            myNotes: "Mes notes",
+            settings: "Paramètres",
+            help: "Aide",
+            share: "Partager",
+            versionHistory: "Historique des versions",
+            bgColor: "Fond",
+            insertImage: "Insérer une image",
+            rename: "Renommer",
+            print: "Imprimer",
+            delete: "Supprimer",
+            close: "Fermer",
+            save: "Enregistrer",
+            theme: "Thème :",
+            language: "Langue :",
+            addNewNote: "Ajouter une nouvelle note",
+            noteTitle: "Titre de la note",
+            saveNote: "Enregistrer la note",
+            pleaseSelectNote: "Veuillez sélectionner ou créer une note",
+            pleaseEnterTitle: "Veuillez entrer un titre de note.",
+            noteImported: "Note importée.",
+            sharedNoteImported: "Note partagée importée.",
+            noteDeleted: "Note supprimée.",
+            shareDialogOpened: "Dialogue de partage ouvert.",
+            shareCancelled: "Partage annulé.",
+            shareLinkCopied: "Lien copié dans le presse-papiers.",
+            versionRestored: "Version restaurée.",
+            deleteConfirm: "Supprimer cette note ?",
+            restoreVersionConfirm: "Restaurer cette version ? Cela écrasera le contenu actuel.",
+            noNoteSelected: "Aucune note sélectionnée.",
+            welcome: "Bienvenue sur GAMERYT Notes !",
+            createNote: "Créer une note",
+            edit: "Éditer",
+            search: "Rechercher",
+            shareNote: "Partager",
+            version: "Historique des versions",
+            settings2: "Paramètres",
+            import2: "Importer",
+            formatting: "Mise en forme",
+            sidebar: "Barre latérale",
+            needHelp: "Besoin de plus d'aide ?",
+            noDocs: "Aucune documentation disponible pour le moment.",
+            fontSize: "Taille de police (px)",
+            pickTextColor: "Choisir la couleur du texte",
+            pickBgColor: "Choisir la couleur de fond",
+            renameNote: "Renommer la note",
+            restore: "Restaurer cette version",
+            noHistory: "Aucun historique disponible.",
+            print2: "Imprimer",
+            yes: "Oui",
+            no: "Non",
+            close2: "Fermer",
+            addNote2: "Ajouter une note",
+            startTyping: "Commencez à écrire votre note ici..."
+        },
+        de: {
+            notes: "Notizen",
+            addNote: "Notiz hinzufügen",
+            import: "Importieren",
+            searchNotes: "Notizen suchen",
+            myNotes: "Meine Notizen",
+            settings: "Einstellungen",
+            help: "Hilfe",
+            share: "Teilen",
+            versionHistory: "Versionsverlauf",
+            bgColor: "Hintergrund",
+            insertImage: "Bild einfügen",
+            rename: "Umbenennen",
+            print: "Drucken",
+            delete: "Löschen",
+            close: "Schließen",
+            save: "Speichern",
+            theme: "Thema:",
+            language: "Sprache:",
+            addNewNote: "Neue Notiz hinzufügen",
+            noteTitle: "Notiztitel",
+            saveNote: "Notiz speichern",
+            pleaseSelectNote: "Bitte wählen oder erstellen Sie eine Notiz",
+            pleaseEnterTitle: "Bitte geben Sie einen Notiztitel ein.",
+            noteImported: "Notiz importiert.",
+            sharedNoteImported: "Geteilte Notiz importiert.",
+            noteDeleted: "Notiz gelöscht.",
+            shareDialogOpened: "Teilen-Dialog geöffnet.",
+            shareCancelled: "Teilen abgebrochen.",
+            shareLinkCopied: "Link in die Zwischenablage kopiert.",
+            versionRestored: "Version wiederhergestellt.",
+            deleteConfirm: "Diese Notiz löschen?",
+            restoreVersionConfirm: "Diese Version wiederherstellen? Der aktuelle Inhalt wird überschrieben.",
+            noNoteSelected: "Keine Notiz ausgewählt.",
+            welcome: "Willkommen bei GAMERYT Notes!",
+            createNote: "Notiz erstellen",
+            edit: "Bearbeiten",
+            search: "Suchen",
+            shareNote: "Teilen",
+            version: "Versionsverlauf",
+            settings2: "Einstellungen",
+            import2: "Importieren",
+            formatting: "Formatierung",
+            sidebar: "Seitenleiste",
+            needHelp: "Brauchen Sie mehr Hilfe?",
+            noDocs: "Noch keine Dokumentation verfügbar.",
+            fontSize: "Schriftgröße (px)",
+            pickTextColor: "Textfarbe wählen",
+            pickBgColor: "Notizhintergrund wählen",
+            renameNote: "Notiz umbenennen",
+            restore: "Diese Version wiederherstellen",
+            noHistory: "Kein Verlauf verfügbar.",
+            print2: "Drucken",
+            yes: "Ja",
+            no: "Nein",
+            close2: "Schließen",
+            addNote2: "Notiz hinzufügen",
+            startTyping: "Beginnen Sie hier mit Ihrer Notiz..."
+        },
+        zh: {
+            notes: "笔记",
+            addNote: "添加笔记",
+            import: "导入",
+            searchNotes: "搜索笔记",
+            myNotes: "我的笔记",
+            settings: "设置",
+            help: "帮助",
+            share: "分享",
+            versionHistory: "版本历史",
+            bgColor: "背景",
+            insertImage: "插入图片",
+            rename: "重命名",
+            print: "打印",
+            delete: "删除",
+            close: "关闭",
+            save: "保存",
+            theme: "主题：",
+            language: "语言：",
+            addNewNote: "添加新笔记",
+            noteTitle: "笔记标题",
+            saveNote: "保存笔记",
+            pleaseSelectNote: "请选择或创建一个笔记",
+            pleaseEnterTitle: "请输入笔记标题。",
+            noteImported: "笔记已导入。",
+            sharedNoteImported: "共享笔记已导入。",
+            noteDeleted: "笔记已删除。",
+            shareDialogOpened: "已打开分享对话框。",
+            shareCancelled: "已取消分享。",
+            shareLinkCopied: "链接已复制到剪贴板。",
+            versionRestored: "版本已恢复。",
+            deleteConfirm: "删除此笔记？",
+            restoreVersionConfirm: "恢复此版本？这将覆盖当前内容。",
+            noNoteSelected: "未选择笔记。",
+            welcome: "欢迎使用 GAMERYT Notes！",
+            createNote: "创建笔记",
+            edit: "编辑",
+            search: "搜索",
+            shareNote: "分享",
+            version: "版本历史",
+            settings2: "设置",
+            import2: "导入",
+            formatting: "格式",
+            sidebar: "侧边栏",
+            needHelp: "需要更多帮助？",
+            noDocs: "暂无文档。",
+            fontSize: "字体大小 (px)",
+            pickTextColor: "选择文本颜色",
+            pickBgColor: "选择笔记背景",
+            renameNote: "重命名笔记",
+            restore: "恢复此版本",
+            noHistory: "没有可用历史记录。",
+            print2: "打印",
+            yes: "是",
+            no: "否",
+            close2: "关闭",
+            addNote2: "添加笔记",
+            startTyping: "在这里开始输入你的笔记..."
+        },
+        ru: {
+            notes: "Заметки",
+            addNote: "Добавить заметку",
+            import: "Импорт",
+            searchNotes: "Поиск заметок",
+            myNotes: "Мои заметки",
+            settings: "Настройки",
+            help: "Помощь",
+            share: "Поделиться",
+            versionHistory: "История версий",
+            bgColor: "Фон",
+            insertImage: "Вставить изображение",
+            rename: "Переименовать",
+            print: "Печать",
+            delete: "Удалить",
+            close: "Закрыть",
+            save: "Сохранить",
+            theme: "Тема:",
+            language: "Язык:",
+            addNewNote: "Добавить новую заметку",
+            noteTitle: "Название заметки",
+            saveNote: "Сохранить заметку",
+            pleaseSelectNote: "Пожалуйста, выберите или создайте заметку",
+            pleaseEnterTitle: "Пожалуйста, введите название заметки.",
+            noteImported: "Заметка импортирована.",
+            sharedNoteImported: "Общая заметка импортирована.",
+            noteDeleted: "Заметка удалена.",
+            shareDialogOpened: "Окно обмена открыто.",
+            shareCancelled: "Обмен отменен.",
+            shareLinkCopied: "Ссылка скопирована в буфер обмена.",
+            versionRestored: "Версия восстановлена.",
+            deleteConfirm: "Удалить эту заметку?",
+            restoreVersionConfirm: "Восстановить эту версию? Это перезапишет текущее содержимое.",
+            noNoteSelected: "Заметка не выбрана.",
+            welcome: "Добро пожаловать в GAMERYT Notes!",
+            createNote: "Создать заметку",
+            edit: "Редактировать",
+            search: "Поиск",
+            shareNote: "Поделиться",
+            version: "История версий",
+            settings2: "Настройки",
+            import2: "Импорт",
+            formatting: "Форматирование",
+            sidebar: "Боковая панель",
+            needHelp: "Нужна дополнительная помощь?",
+            noDocs: "Документация пока недоступна.",
+            fontSize: "Размер шрифта (px)",
+            pickTextColor: "Выбрать цвет текста",
+            pickBgColor: "Выбрать фон заметки",
+            renameNote: "Переименовать заметку",
+            restore: "Восстановить эту версию",
+            noHistory: "Нет доступной истории.",
+            print2: "Печать",
+            yes: "Да",
+            no: "Нет",
+            close2: "Закрыть",
+            addNote2: "Добавить заметку",
+            startTyping: "Начните вводить свою заметку здесь..."
+        },
+        ja: {
+            notes: "ノート",
+            addNote: "ノート追加",
+            import: "インポート",
+            searchNotes: "ノート検索",
+            myNotes: "マイノート",
+            settings: "設定",
+            help: "ヘルプ",
+            share: "共有",
+            versionHistory: "バージョン履歴",
+            bgColor: "背景",
+            insertImage: "画像挿入",
+            rename: "名前変更",
+            print: "印刷",
+            delete: "削除",
+            close: "閉じる",
+            save: "保存",
+            theme: "テーマ：",
+            language: "言語：",
+            addNewNote: "新しいノート追加",
+            noteTitle: "ノートタイトル",
+            saveNote: "ノート保存",
+            pleaseSelectNote: "ノートを選択または作成してください",
+            pleaseEnterTitle: "ノートタイトルを入力してください。",
+            noteImported: "ノートをインポートしました。",
+            sharedNoteImported: "共有ノートをインポートしました。",
+            noteDeleted: "ノートを削除しました。",
+            shareDialogOpened: "共有ダイアログを開きました。",
+            shareCancelled: "共有をキャンセルしました。",
+            shareLinkCopied: "リンクをクリップボードにコピーしました。",
+            versionRestored: "バージョンを復元しました。",
+            deleteConfirm: "このノートを削除しますか？",
+            restoreVersionConfirm: "このバージョンを復元しますか？現在の内容が上書きされます。",
+            noNoteSelected: "ノートが選択されていません。",
+            welcome: "GAMERYT Notesへようこそ！",
+            createNote: "ノート作成",
+            edit: "編集",
+            search: "検索",
+            shareNote: "共有",
+            version: "バージョン履歴",
+            settings2: "設定",
+            import2: "インポート",
+            formatting: "書式設定",
+            sidebar: "サイドバー",
+            needHelp: "さらにヘルプが必要ですか？",
+            noDocs: "ドキュメントはまだありません。",
+            fontSize: "フォントサイズ (px)",
+            pickTextColor: "テキスト色を選択",
+            pickBgColor: "ノート背景色を選択",
+            renameNote: "ノート名変更",
+            restore: "このバージョンを復元",
+            noHistory: "履歴はありません。",
+            print2: "印刷",
+            yes: "はい",
+            no: "いいえ",
+            close2: "閉じる",
+            addNote2: "ノート追加",
+            startTyping: "ここにノートを入力してください..."
+        },
+        ko: {
+            notes: "노트",
+            addNote: "노트 추가",
+            import: "가져오기",
+            searchNotes: "노트 검색",
+            myNotes: "내 노트",
+            settings: "설정",
+            help: "도움말",
+            share: "공유",
+            versionHistory: "버전 기록",
+            bgColor: "배경",
+            insertImage: "이미지 삽입",
+            rename: "이름 변경",
+            print: "인쇄",
+            delete: "삭제",
+            close: "닫기",
+            save: "저장",
+            theme: "테마:",
+            language: "언어:",
+            addNewNote: "새 노트 추가",
+            noteTitle: "노트 제목",
+            saveNote: "노트 저장",
+            pleaseSelectNote: "노트를 선택하거나 새로 만드세요",
+            pleaseEnterTitle: "노트 제목을 입력하세요.",
+            noteImported: "노트가 가져와졌습니다.",
+            sharedNoteImported: "공유 노트가 가져와졌습니다.",
+            noteDeleted: "노트가 삭제되었습니다.",
+            shareDialogOpened: "공유 대화상자가 열렸습니다.",
+            shareCancelled: "공유가 취소되었습니다.",
+            shareLinkCopied: "링크가 클립보드에 복사되었습니다.",
+            versionRestored: "버전이 복원되었습니다.",
+            deleteConfirm: "이 노트를 삭제하시겠습니까?",
+            restoreVersionConfirm: "이 버전을 복원하시겠습니까? 현재 내용이 덮어써집니다.",
+            noNoteSelected: "선택된 노트가 없습니다.",
+            welcome: "GAMERYT Notes에 오신 것을 환영합니다!",
+            createNote: "노트 만들기",
+            edit: "편집",
+            search: "검색",
+            shareNote: "공유",
+            version: "버전 기록",
+            settings2: "설정",
+            import2: "가져오기",
+            formatting: "서식",
+            sidebar: "사이드바",
+            needHelp: "더 도움이 필요하신가요?",
+            noDocs: "아직 문서가 없습니다.",
+            fontSize: "글꼴 크기 (px)",
+            pickTextColor: "텍스트 색상 선택",
+            pickBgColor: "노트 배경 선택",
+            renameNote: "노트 이름 변경",
+            restore: "이 버전 복원",
+            noHistory: "기록이 없습니다.",
+            print2: "인쇄",
+            yes: "예",
+            no: "아니오",
+            close2: "닫기",
+            addNote2: "노트 추가",
+            startTyping: "여기에 노트를 입력하세요..."
+        },
+        pt: {
+            notes: "Notas",
+            addNote: "Adicionar Nota",
+            import: "Importar",
+            searchNotes: "Pesquisar Notas",
+            myNotes: "Minhas Notas",
+            settings: "Configurações",
+            help: "Ajuda",
+            share: "Compartilhar",
+            versionHistory: "Histórico de Versões",
+            bgColor: "Fundo",
+            insertImage: "Inserir Imagem",
+            rename: "Renomear",
+            print: "Imprimir",
+            delete: "Excluir",
+            close: "Fechar",
+            save: "Salvar",
+            theme: "Tema:",
+            language: "Idioma:",
+            addNewNote: "Adicionar Nova Nota",
+            noteTitle: "Título da nota",
+            saveNote: "Salvar Nota",
+            pleaseSelectNote: "Selecione ou crie uma nota",
+            pleaseEnterTitle: "Por favor, insira um título para a nota.",
+            noteImported: "Nota importada.",
+            sharedNoteImported: "Nota compartilhada importada.",
+            noteDeleted: "Nota excluída.",
+            shareDialogOpened: "Diálogo de compartilhamento aberto.",
+            shareCancelled: "Compartilhamento cancelado.",
+            shareLinkCopied: "Link copiado para a área de transferência.",
+            versionRestored: "Versão restaurada.",
+            deleteConfirm: "Excluir esta nota?",
+            restoreVersionConfirm: "Restaurar esta versão? Isso substituirá o conteúdo atual.",
+            noNoteSelected: "Nenhuma nota selecionada.",
+            welcome: "Bem-vindo ao GAMERYT Notes!",
+            createNote: "Criar Nota",
+            edit: "Editar",
+            search: "Pesquisar",
+            shareNote: "Compartilhar",
+            version: "Histórico de Versões",
+            settings2: "Configurações",
+            import2: "Importar",
+            formatting: "Formatação",
+            sidebar: "Barra lateral",
+            needHelp: "Precisa de mais ajuda?",
+            noDocs: "Nenhuma documentação disponível ainda.",
+            fontSize: "Tamanho da fonte (px)",
+            pickTextColor: "Escolher cor do texto",
+            pickBgColor: "Escolher fundo da nota",
+            renameNote: "Renomear Nota",
+            restore: "Restaurar Esta Versão",
+            noHistory: "Nenhum histórico disponível.",
+            print2: "Imprimir",
+            yes: "Sim",
+            no: "Não",
+            close2: "Fechar",
+            addNote2: "Adicionar Nota",
+            startTyping: "Comece a digitar sua nota aqui..."
+        }
+    };
+
+    function getLang() {
+        return localStorage.getItem("language") || "en";
+    }
+    function t(key) {
+        const lang = getLang();
+        return (translations[lang] && translations[lang][key]) || translations.en[key] || key;
+    }
+
+    function applyTranslations() {
+        // Sidebar
+        document.querySelector("aside.sidebar h2").textContent = t("notes");
+        document.getElementById("addNote").innerHTML = `<i class="ri-add-line"></i> ${t("addNote")}`;
+        document.getElementById("importNote").title = t("import");
+        document.querySelector(".search-bar input").placeholder = t("searchNotes");
+        document.querySelector("aside.sidebar h3").textContent = t("myNotes");
+        document.getElementById("settingsBtn").innerHTML = `<i class="ri-settings-2-line"></i>${t("settings")}`;
+        document.getElementById("helpBtn").innerHTML = `<i class="ri-question-line"></i>${t("help")}`;
+
+        // Topbar
+        document.getElementById("versionHistory").title = t("versionHistory");
+        document.getElementById("bgColor").title = t("bgColor");
+        document.getElementById("insertImage").title = t("insertImage");
+        document.getElementById("shareBtn").innerHTML = `<i class="ri-user-add-line"></i><span class="share-text">${t("share")}</span>`;
+
+        // Settings modal
+        document.querySelector("#settingsModal h2").textContent = t("settings");
+        document.querySelector("#settingsModal label[for='theme']").textContent = t("theme");
+        document.querySelector("#settingsModal label[for='language']").textContent = t("language");
+
+        // Add note modal
+        document.querySelector("#addNewNote h2").textContent = t("addNewNote");
+        document.getElementById("noteTitle").placeholder = t("noteTitle");
+        document.getElementById("saveNote").textContent = t("saveNote");
+
+        // Close buttons (modals)
+        document.querySelectorAll(".modal .close").forEach(el => {
+            el.title = t("close");
+        });
+
+        // Toolbar tooltips
+        document.querySelectorAll(".ri-bold").forEach(el => el.title = "Bold");
+        document.querySelectorAll(".ri-italic").forEach(el => el.title = "Italic");
+        document.querySelectorAll(".ri-underline").forEach(el => el.title = "Underline");
+        document.querySelectorAll(".ri-list-unordered").forEach(el => el.title = t("formatting"));
+        document.querySelectorAll(".ri-list-ordered").forEach(el => el.title = t("formatting"));
+        document.querySelectorAll(".ri-align-left").forEach(el => el.title = t("formatting"));
+        document.querySelectorAll(".ri-align-center").forEach(el => el.title = t("formatting"));
+        document.querySelectorAll(".ri-align-right").forEach(el => el.title = t("formatting"));
+        document.querySelectorAll(".ri-font-color").forEach(el => el.title = t("pickTextColor"));
+        document.querySelectorAll(".ri-arrow-left-right-line").forEach(el => el.title = "Text Left-to-Right");
+        document.querySelectorAll(".ri-arrow-right-line").forEach(el => el.title = "Text Right-to-Left");
+        document.querySelectorAll(".ri-superscript").forEach(el => el.title = "Superscript");
+        document.querySelectorAll(".ri-subscript").forEach(el => el.title = "Subscript");
+        document.querySelectorAll(".ri-strikethrough").forEach(el => el.title = "Strikethrough");
+        document.querySelectorAll(".ri-code-s-slash-line").forEach(el => el.title = "Code Block");
+
+        // Font size input
+        document.querySelectorAll("#fontSize").forEach(el => el.title = t("fontSize"));
+
+        // Help modal (if open)
+        const helpModal = document.getElementById("helpModal");
+        if (helpModal && helpModal.style.display === "flex") {
+            helpModal.querySelector("h2").textContent = t("welcome");
+            helpModal.querySelector("ol").innerHTML = `
+                <li><b>${t("createNote")}:</b> ${t("addNote2")}をクリックして新しいノートを作成します。タイトルを入力して保存します。</li>
+                <li><b>${t("edit")}:</b> サイドバーのノートをクリックして編集します。下のツールバーでテキストやリスト、コードなどをフォーマットできます。</li>
+                <li><b>${t("search")}:</b> 検索バーでタイトルからノートを素早く探せます。</li>
+                <li><b>${t("shareNote")}:</b> <i class="ri-user-add-line"></i> ${t("share")}ボタンでノートのリンクをコピー・共有できます。</li>
+                <li><b>${t("version")}:</b> <i class="ri-history-line"></i> をクリックして以前のバージョンを表示・復元できます。</li>
+                <li><b>${t("settings2")}:</b> <i class="ri-settings-2-line"></i> ${t("settings")}からテーマや言語を変更できます。</li>
+                <li><b>${t("import2")}:</b> <i class="ri-import-line"></i> で.txtや.mdファイルをノートとしてインポートできます。</li>
+                <li><b>${t("formatting")}:</b> ツールバーで太字・斜体・下線・リスト・フォントサイズ・コードブロックなどが使えます。</li>
+                <li><b>${t("sidebar")}:</b> サイドバーを折りたたんだり展開したりできます。</li>
+            `;
+            helpModal.querySelector("div[style*='margin-top:22px;']").innerHTML = `<b>${t("needHelp")}</b> ${t("noDocs")}`;
+            helpModal.querySelector("#closeHelpBtn").textContent = t("close2");
+        }
+
+        // Version history modal (if open)
+        const versionModal = document.getElementById("versionHistoryModal");
+        if (versionModal && versionModal.style.display === "flex") {
+            versionModal.querySelector("h2").textContent = t("versionHistory");
+            versionModal.querySelector("#restoreVersionBtn").textContent = t("restore");
+            versionModal.querySelector("#closeVersionBtn").textContent = t("close2");
+            if (versionModal.querySelector("#versionList").textContent.trim() === "No history available.") {
+                versionModal.querySelector("#versionList").textContent = t("noHistory");
+            }
+        }
+
+        // Rename note modal (if open)
+        const renameModal = document.getElementById("renameNoteModal");
+        if (renameModal && renameModal.style.display === "flex") {
+            renameModal.querySelector("h2").textContent = t("renameNote");
+            renameModal.querySelector("#renameNoteSaveBtn").textContent = t("save");
+        }
+
+        // Confirm modal (if open)
+        const confirmModal = document.getElementById("confirmModal");
+        if (confirmModal && confirmModal.style.display === "flex") {
+            confirmModal.querySelector("#confirmYes").textContent = t("yes");
+            confirmModal.querySelector("#confirmNo").textContent = t("no");
+        }
+    }
+
+    // Change language
+    function changeLanguage() {
+        const lang = document.getElementById("language").value;
+        localStorage.setItem("language", lang);
+        applyTranslations();
+        renderNotes(document.getElementById("searchNotes").value);
+        // Update note area placeholder
+        document.getElementById("noteArea").setAttribute("placeholder", t("startTyping"));
+        // Update please select note message if needed
+        if (!currentNoteId) {
+            document.getElementById("noteText").textContent = t("pleaseSelectNote");
+        }
+    }
+
+    // On load, set language dropdown and apply translations
+    window.addEventListener("DOMContentLoaded", function () {
+        const lang = localStorage.getItem("language") || "en";
+        document.getElementById("language").value = lang;
+        applyTranslations();
+        document.getElementById("noteArea").setAttribute("placeholder", t("startTyping"));
+        if (!currentNoteId) {
+            document.getElementById("noteText").textContent = t("pleaseSelectNote");
+        }
+    });
+
+    // Patch showToast to use translations for some messages
+    const origShowToast = window.showToast;
+    window.showToast = function (msg, duration) {
+        // Try to translate known keys
+        const key = Object.keys(translations.en).find(k => translations.en[k] === msg);
+        if (key) {
+            msg = t(key);
+        }
+        origShowToast(msg, duration);
+    };
+
+    // Patch confirmBox to use translations for known messages
+    const origConfirmBox = window.confirmBox;
+    window.confirmBox = function (msg, onYes, onNo) {
+        let key = Object.keys(translations.en).find(k => translations.en[k] === msg);
+        if (key) msg = t(key);
+        origConfirmBox(msg, onYes, onNo);
+    };
+
+    // Patch renderNotes to use translated tooltips
+    const origRenderNotes = window.renderNotes;
+    window.renderNotes = function (filter = "") {
+        origRenderNotes(filter);
+        document.querySelectorAll(".note-item .ri-more-2-fill").forEach(el => {
+            el.title = t("more");
+        });
+    };
+
+    // Patch openNote to update please select note message
+    const origOpenNoteLang = window.openNote;
+    window.openNote = function(id) {
+        origOpenNoteLang(id);
+        if (!id) {
+            document.getElementById("noteText").textContent = t("pleaseSelectNote");
+        }
+    };
+
+    // Patch clearNoteArea to update message
+    const origClearNoteAreaLang = window.clearNoteArea;
+    window.clearNoteArea = function() {
+        origClearNoteAreaLang();
+        document.getElementById("noteText").textContent = t("pleaseSelectNote");
+    };
+
+    // Show a help/tutorial modal when Help is clicked
+    function showHelpModal() {
+        let modal = document.getElementById("helpModal");
+        if (!modal) {
+            modal = document.createElement("div");
+            modal.id = "helpModal";
+            modal.className = "modal";
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width:700px;position:relative;">
+                    <div class="close" id="closeHelpModal" style="position:absolute;top:10px;right:10px;font-size:32px;cursor:pointer;">&times;</div>
+                    <h2>Welcome to GAMERYT Notes!</h2>
+                    <ol style="margin:18px 0 0 18px;padding:0 0 0 18px;">
+                        <li><b>Create a Note:</b> Click <b>Add Note</b> to start a new note. Enter a title and save.</li>
+                        <li><b>Edit:</b> Click a note in the sidebar to edit. Use the toolbar below to format text, lists, code, and more.</li>
+                        <li><b>Search:</b> Use the search bar to quickly find notes by title.</li>
+                        <li><b>Share:</b> Click the <i class="ri-user-add-line"></i> Share button to copy/share a link to your note.</li>
+                        <li><b>Version History:</b> Click <i class="ri-history-line"></i> to view and restore previous versions of your note.</li>
+                        <li><b>Settings:</b> Change theme or language from <i class="ri-settings-2-line"></i> Settings.</li>
+                        <li><b>Import:</b> Use <i class="ri-import-line"></i> to import .txt or .md files as notes.</li>
+                        <li><b>Formatting:</b> Use the toolbar for bold, italic, underline, lists, font size, code blocks, and more.</li>
+                        <li><b>Sidebar:</b> Collapse or expand the sidebar for more space.</li>
+                    </ol>
+                    <div style="margin-top:22px;">
+                        <b>Need more help?</b> No documentation is available yet.
+                    </div>
+                    <div style="margin-top:18px;text-align:right;">
+                        <button class="btn" id="closeHelpBtn">Close</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        modal.style.display = "flex";
+        // Close handlers
+        modal.querySelector("#closeHelpModal").onclick =
+        modal.querySelector("#closeHelpBtn").onclick = function () {
+            modal.style.display = "none";
+        };
+        // Click outside closes modal
+        function outsideHandler(e) {
+            if (e.target === modal) {
+                modal.style.display = "none";
+                document.removeEventListener("mousedown", outsideHandler);
+            }
+        }
+        setTimeout(() => {
+            document.addEventListener("mousedown", outsideHandler);
+        }, 0);
+    }
+
+    document.getElementById("helpBtn").onclick = showHelpModal;
+    document.getElementById("helpIcon").onclick = showHelpModal;
+
+
+
+    document.getElementById("importNote").onclick = function () {
+        // Create a hidden file input if not already present
+        let fileInput = document.getElementById("importNoteFileInput");
+        if (!fileInput) {
+            fileInput = document.createElement("input");
+            fileInput.type = "file";
+            fileInput.accept = ".txt,.md,.markdown,text/plain,text/markdown";
+            fileInput.style.display = "none";
+            fileInput.id = "importNoteFileInput";
+            document.body.appendChild(fileInput);
+        }
+        fileInput.value = ""; // reset so same file can be picked again
+        fileInput.onchange = function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (ev) {
+                let content = ev.target.result;
+                let title = file.name.replace(/\.(txt|md|markdown)$/i, "");
+                // If markdown, optionally convert to HTML (basic)
+                if (/\.(md|markdown)$/i.test(file.name)) {
+                    // Simple markdown to HTML (headings, bold, italic, lists)
+                    content = content
+                        .replace(/^###### (.*)$/gim, "<h6>$1</h6>")
+                        .replace(/^##### (.*)$/gim, "<h5>$1</h5>")
+                        .replace(/^#### (.*)$/gim, "<h4>$1</h4>")
+                        .replace(/^### (.*)$/gim, "<h3>$1</h3>")
+                        .replace(/^## (.*)$/gim, "<h2>$1</h2>")
+                        .replace(/^# (.*)$/gim, "<h1>$1</h1>")
+                        .replace(/\*\*(.*?)\*\*/gim, "<b>$1</b>")
+                        .replace(/\*(.*?)\*/gim, "<i>$1</i>")
+                        .replace(/^\s*[-*+] (.*)$/gim, "<ul><li>$1</li></ul>")
+                        .replace(/^\s*\d+\.\s+(.*)$/gim, "<ol><li>$1</li></ol>")
+                        .replace(/\n{2,}/g, "<br><br>");
+                    // Merge adjacent <ul> or <ol>
+                    content = content.replace(/(<\/ul>\s*<ul>)/g, "");
+                    content = content.replace(/(<\/ol>\s*<ol>)/g, "");
+                } else {
+                    // Plain text: escape HTML and convert line breaks
+                    content = content.replace(/[&<>"']/g, function (c) {
+                        return ({
+                            '&': '&amp;',
+                            '<': '&lt;',
+                            '>': '&gt;',
+                            '"': '&quot;',
+                            "'": '&#39;'
+                        })[c];
+                    }).replace(/\n/g, "<br>");
+                }
+                // Add new note
+                const id = Date.now().toString();
+                notes.unshift({ id, title, content });
+                saveNotes();
+                renderNotes();
+                openNote(id);
+                showToast("Note imported.");
+            };
+            reader.readAsText(file);
+        };
+        fileInput.click();
+    };
+
+
+        document.getElementById("moreBtn").onclick = function (e) {
+            e.stopPropagation();
+            let menu = document.getElementById("noteMenu");
+            if (menu) menu.remove();
+            menu = document.createElement("div");
+            menu.id = "noteMenu";
+            menu.style = "position:absolute;z-index:9999;background:#fff;border:1px solid #ccc;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08);padding:8px 0;min-width:140px;";
+            menu.innerHTML = `
+                <div class="menu-item" data-action="share" style="padding:8px 18px;cursor:pointer;display:flex;align-items:center;gap:8px;"><i class="ri-user-add-line"></i>Share</div>
+                <div class="menu-item" data-action="rename" style="padding:8px 18px;cursor:pointer;display:flex;align-items:center;gap:8px;"><i class="ri-edit-2-line"></i>Rename</div>
+                <div class="menu-item" data-action="history" style="padding:8px 18px;cursor:pointer;display:flex;align-items:center;gap:8px;"><i class="ri-history-line"></i>Version History</div>
+                <div class="menu-item" data-action="print" style="padding:8px 18px;cursor:pointer;display:flex;align-items:center;gap:8px;"><i class="ri-printer-line"></i>Print</div>
+                <div class="menu-item" data-action="delete" style="padding:8px 18px;cursor:pointer;display:flex;align-items:center;gap:8px;color:#d00;"><i class="ri-delete-bin-line"></i>Delete</div>
+            `;
+            document.body.appendChild(menu);
+            // Position menu below the more icon
+            const rect = this.getBoundingClientRect();
+            menu.style.top = (window.scrollY + rect.bottom + 2) + "px";
+            menu.style.left = (window.scrollX + rect.left) + "px";
+            // Remove menu on click outside
+            setTimeout(() => {
+                document.addEventListener("mousedown", hideMenu, { once: true });
+            }, 10);
+            function hideMenu(ev) {
+                if (!menu.contains(ev.target)) menu.remove();
+            }
+            document.addEventListener("click", (ev) => {
+                if (!menu.contains(ev.target) && ev.target !== e.target) {
+                    menu.remove();
+                }
+            });
+            // Handle menu actions
+            menu.onclick = function(ev) {
+                const action = ev.target.closest(".menu-item")?.dataset.action;
+                if (!action) return;
+                menu.remove();
+                switch (action) {
+                    case "share":
+                        document.getElementById("shareBtn").click();
+                        break;
+                    case "rename":
+                        if (!currentNoteId) return showToast("No note selected.");
+                        const note = notes.find(n => n.id === currentNoteId);
+                        if (!note) return;
+                        // Show a modal for renaming instead of prompt()
+                        let renameModal = document.getElementById("renameNoteModal");
+                        if (!renameModal) {
+                            renameModal = document.createElement("div");
+                            renameModal.id = "renameNoteModal";
+                            renameModal.className = "modal";
+                            renameModal.innerHTML = `
+                                <div class="modal-content">
+                                    <div class="close" id="closeRenameModal">&times;</div>
+                                    <h2>Rename Note</h2>
+                                    <input type="text" id="renameNoteInput" style="width:100%;margin-bottom:12px;" />
+                                    <button class="btn" id="renameNoteSaveBtn">Save</button>
+                                </div>
+                            `;
+                            document.body.appendChild(renameModal);
+                        }
+                        renameModal.style.display = "flex";
+                        const input = renameModal.querySelector("#renameNoteInput");
+                        input.value = note.title;
+                        input.focus();
+                        // Close modal handler
+                        function closeRenameModal() {
+                            renameModal.style.display = "none";
+                        }
+                        renameModal.querySelector("#closeRenameModal").onclick = closeRenameModal;
+                        // Save handler
+                        renameModal.querySelector("#renameNoteSaveBtn").onclick = function () {
+                            const newTitle = input.value.trim();
+                            if (!newTitle) {
+                                showToast("Please enter a note title.");
+                                return;
+                            }
+                            note.title = newTitle;
+                            saveNotes();
+                            renderNotes();
+                            document.getElementById("noteText").textContent = note.title;
+                            closeRenameModal();
+                        };
+                        // Enter key submits
+                        input.onkeydown = function (ev) {
+                            if (ev.key === "Enter") {
+                                renameModal.querySelector("#renameNoteSaveBtn").click();
+                            }
+                        };
+                        // Click outside closes modal
+                        function outsideHandler(ev) {
+                            if (ev.target === renameModal) {
+                                closeRenameModal();
+                                document.removeEventListener("mousedown", outsideHandler);
+                            }
+                        }
+                        setTimeout(() => {
+                            document.addEventListener("mousedown", outsideHandler);
+                        }, 0);
+                        break;
+                    case "history":
+                        if (!currentNoteId) return showToast("No note selected.");
+                        showVersionHistory(currentNoteId);
+                        break;
+                    case "print":
+                        window.print();
+                        break;
+                    case "delete":
+                        if (!currentNoteId) return showToast("No note selected.");
+                        confirmBox("Delete this note?", () => {
+                            notes = notes.filter(n => n.id !== currentNoteId);
+                            saveNotes();
+                            renderNotes();
+                            clearNoteArea();
+                            showToast("Note deleted.");
+                        });
+                        break;
+                }
+            };
+        };
+
+        document.getElementById("shareBtn").onclick = async function () {
+            if (!currentNoteId) {
+                showToast("No note selected.");
+                return;
+            }
+            const note = notes.find(n => n.id === currentNoteId);
+            if (!note) return;
+            // Create a shareable link with note title/content as URL params
+            const url = new URL(window.location.href.split("#")[0]);
+            url.searchParams.set("sharedTitle", encodeURIComponent(note.title));
+            url.searchParams.set("sharedContent", encodeURIComponent(note.content));
+            const shareData = {
+                title: note.title,
+                text: note.title,
+                url: url.toString()
+            };
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                    showToast("Share dialog opened.");
+                } catch (e) {
+                    showToast("Share cancelled.");
+                }
+            } else {
+                // Fallback: copy link to clipboard
+                navigator.clipboard.writeText(url.toString());
+                showToast("Share link copied to clipboard.");
+            }
+        };
+
+        // On load: check for shared note in URL and create it
+        window.addEventListener("DOMContentLoaded", function () {
+            const params = new URLSearchParams(window.location.search);
+            const sharedTitle = params.get("sharedTitle");
+            const sharedContent = params.get("sharedContent");
+            if (sharedTitle && sharedContent) {
+                // Only add if not already present
+                if (!notes.some(n => n.title === decodeURIComponent(sharedTitle) && n.content === decodeURIComponent(sharedContent))) {
+                    const id = Date.now().toString();
+                    notes.unshift({
+                        id,
+                        title: decodeURIComponent(sharedTitle),
+                        content: decodeURIComponent(sharedContent)
+                    });
+                    saveNotes();
+                    renderNotes();
+                    openNote(id);
+                    showToast("Shared note imported.");
+                }
+                // Remove params from URL (optional, for cleanliness)
+                if (window.history.replaceState) {
+                    const cleanUrl = window.location.origin + window.location.pathname;
+                    window.history.replaceState({}, document.title, cleanUrl);
+                }
+            }
+        });
+    /* --- Version History Feature --- */
+
+    // Add version history array to each note if not present
+    function ensureNoteHistory(note) {
+        if (!note.history) note.history = [];
+    }
+
+    // Save a new version to history (called on note save/content change)
+    function saveVersion(note) {
+        ensureNoteHistory(note);
+        // Only save if content changed from last version and not empty
+        const last = note.history.length ? note.history[0].content : null;
+        if (note.content !== last && note.content !== undefined) {
+            note.history.unshift({
+                content: note.content,
+                timestamp: Date.now()
+            });
+            // No limit on history length
+            saveNotes();
+        }
+    }
+
+    // Patch noteArea input to save version (debounced)
+    (function () {
+        let versionTimer = null;
+        const noteArea = document.getElementById("noteArea");
+        noteArea.addEventListener("input", function () {
+            if (!currentNoteId) return;
+            const note = notes.find(n => n.id === currentNoteId);
+            if (!note) return;
+            clearTimeout(versionTimer);
+            versionTimer = setTimeout(() => {
+                saveVersion(note);
+            }, 1200);
+        });
+    })();
+
+    // Version History Modal
+    function showVersionHistory(noteId) {
+        const note = notes.find(n => n.id === noteId);
+        if (!note) return;
+        ensureNoteHistory(note);
+
+        let modal = document.getElementById("versionHistoryModal");
+        if (!modal) {
+            modal = document.createElement("div");
+            modal.id = "versionHistoryModal";
+            modal.className = "modal";
+            modal.innerHTML = `
+                <div class="modal-content" id="versionHistoryModalContent" style="max-width:800px;min-width:320px;">
+                    <div class="close" id="closeVersionHistory">&times;</div>
+                    <h2>Version History</h2>
+                    <div id="versionList" style="max-height:320px;overflow-y:auto;margin-bottom:18px;"></div>
+                    <div id="versionPreview" style="background:#f8f8ff;border-radius:8px;padding:14px 18px;min-height:80px;max-height:260px;overflow:auto;white-space:pre-wrap;"></div>
+                    <div style="margin-top:18px;display:flex;gap:12px;">
+                        <button class="btn" id="restoreVersionBtn" style="display:none;">Restore This Version</button>
+                        <button class="btn" id="closeVersionBtn" style="background:#eee;color:#222;">Close</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Set dark mode styles if needed
+        function applyVersionModalTheme() {
+            const isDark = document.body.classList.contains("dark");
+            const modalContent = modal.querySelector(".modal-content");
+            const preview = modal.querySelector("#versionPreview");
+            if (isDark) {
+                modalContent.style.background = "#1a002a";
+                modalContent.style.color = "#f2f2f2";
+                preview.style.background = "#2a003a";
+                preview.style.color = "#fff";
+            } else {
+                modalContent.style.background = "";
+                modalContent.style.color = "";
+                preview.style.background = "#f8f8ff";
+                preview.style.color = "";
+            }
+        }
+        applyVersionModalTheme();
+
+        // Also update theme if user toggles dark mode while modal is open
+        const observer = new MutationObserver(applyVersionModalTheme);
+        observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+        // Remove observer when modal closes
+        function removeObserver() {
+            observer.disconnect();
+        }
+
+        // Render version list
+        const versionList = modal.querySelector("#versionList");
+        versionList.innerHTML = "";
+        if (!note.history.length) {
+            versionList.innerHTML = "<div style='color:#888;'>No history available.</div>";
+        } else {
+            note.history.forEach((ver, idx) => {
+                const date = new Date(ver.timestamp);
+                const item = document.createElement("div");
+                item.style = "padding:8px 0;cursor:pointer;border-bottom:1px solid #eee;";
+                item.textContent = date.toLocaleString();
+                item.onclick = function () {
+                    // Show preview
+                    modal.querySelector("#versionPreview").innerHTML = ver.content;
+                    modal.querySelector("#restoreVersionBtn").style.display = "inline-block";
+                    modal.querySelector("#restoreVersionBtn").dataset.idx = idx;
+                    applyVersionModalTheme();
+                };
+                versionList.appendChild(item);
+            });
+        }
+        // Clear preview and restore button
+        modal.querySelector("#versionPreview").innerHTML = "";
+        modal.querySelector("#restoreVersionBtn").style.display = "none";
+
+        // Show modal
+        modal.style.display = "flex";
+        applyVersionModalTheme();
+
+        // Close handlers
+        modal.querySelector("#closeVersionHistory").onclick =
+        modal.querySelector("#closeVersionBtn").onclick = function () {
+            modal.style.display = "none";
+            removeObserver();
+        };
+
+        // Restore version handler
+        modal.querySelector("#restoreVersionBtn").onclick = function () {
+            const idx = parseInt(this.dataset.idx, 10);
+            if (isNaN(idx)) return;
+            confirmBox("Restore this version? This will overwrite the current note content.", () => {
+                note.content = note.history[idx].content;
+                document.getElementById("noteArea").innerHTML = note.content;
+                saveNotes();
+                modal.style.display = "none";
+                removeObserver();
+                showToast("Version restored.");
+            });
+        };
+
+        // Hide on click outside
+        function outsideHandler(e) {
+            if (e.target === modal) {
+                modal.style.display = "none";
+                removeObserver();
+                document.removeEventListener("mousedown", outsideHandler);
+            }
+        }
+        setTimeout(() => {
+            document.addEventListener("mousedown", outsideHandler);
+        }, 0);
+    }
+
+    // Attach version history icon click
+    document.getElementById("versionHistory").onclick = function () {
+        if (!currentNoteId) {
+            showToast("No note selected.");
+            return;
+        }
+        showVersionHistory(currentNoteId);
+    };
+
+function chooseTextColor() {
+    showColorPickerModal("Pick Text Color", "#222", function (color) {
+        if (!color) return;
+        const noteArea = document.getElementById("noteArea");
+        noteArea.focus();
+        const sel = window.getSelection();
+        if (sel && sel.rangeCount > 0 && !sel.isCollapsed && noteArea.contains(sel.anchorNode)) {
+            // Apply color to selected text
+            document.execCommand("foreColor", false, color);
+        } else {
+            // No selection: wrap all content in a span with color
+            let html = noteArea.innerHTML;
+            // Remove previous color spans to avoid nesting
+            html = html.replace(/<span style="color:[^"]*">([\s\S]*?)<\/span>/gi, '$1');
+            noteArea.innerHTML = `<span style="color:${color}">${html}</span>`;
+            // Save to note object if needed
+            if (typeof currentNoteId !== "undefined" && currentNoteId) {
+                const note = notes.find(n => n.id === currentNoteId);
+                if (note) {
+                    note.content = noteArea.innerHTML;
+                    saveNotes();
+                }
+            }
+        }
+    });
+}
+
+document.getElementById("bgColor").onclick = function () {
+    showColorPickerModal("Pick Note Background", "#fff", function (color) {
+        if (!color) return;
+        // Set background color of note area and .note-container
+        document.getElementById("noteArea").style.background = color;
+        const noteContainer = document.querySelector(".note-container");
+        if (noteContainer) noteContainer.style.background = color;
+        // Optionally save to localStorage per note
+        if (currentNoteId) {
+            const note = notes.find(n => n.id === currentNoteId);
+            if (note) {
+                note.bgColor = color;
+                saveNotes();
+            }
+        }
+    });
+};
+
+// Fix for insert image icon
+document.getElementById("insertImage").onclick = function () {
+    let fileInput = document.getElementById("insertImageFileInput");
+    if (!fileInput) {
+        fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/*";
+        fileInput.style.display = "none";
+        fileInput.id = "insertImageFileInput";
+        document.body.appendChild(fileInput);
+    }
+    fileInput.value = "";
+    fileInput.onchange = function (e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+            const img = document.createElement("img");
+            img.src = ev.target.result;
+            img.style.maxWidth = "100%";
+            img.style.display = "block";
+            // Insert image at caret position in noteArea
+            const noteArea = document.getElementById("noteArea");
+            noteArea.focus();
+            if (window.getSelection) {
+                const sel = window.getSelection();
+                if (sel && sel.rangeCount > 0) {
+                    const range = sel.getRangeAt(0);
+                    range.collapse(false);
+                    range.insertNode(img);
+                    // Move caret after image
+                    range.setStartAfter(img);
+                    range.setEndAfter(img);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                } else {
+                    noteArea.appendChild(img);
+                }
+            } else {
+                noteArea.appendChild(img);
+            }
+            // Save note content
+            if (typeof currentNoteId !== "undefined" && currentNoteId) {
+                const note = notes.find(n => n.id === currentNoteId);
+                if (note) {
+                    note.content = noteArea.innerHTML;
+                    saveNotes();
+                }
+            }
+        };
+        reader.readAsDataURL(file);
+    };
+    fileInput.click();
+};
+
+// Show color picker modal utility
+function showColorPickerModal(title, defaultColor, onPick) {
+    let modal = document.getElementById("colorPickerModal");
+    if (!modal) {
+        modal = document.createElement("div");
+        modal.id = "colorPickerModal";
+        modal.style = `
+            position:fixed;top:0;left:0;width:100vw;height:100vh;
+            background:rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;z-index:100001;
+        `;
+        modal.innerHTML = `
+            <div style="background:#fff;padding:28px 32px;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.13);min-width:260px;max-width:90vw;text-align:center;position:relative;">
+                <button id="colorPickerClose" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:24px;cursor:pointer;">&times;</button>
+                <h3 id="colorPickerTitle" style="margin-bottom:18px;"></h3>
+                <input type="color" id="colorPickerInput" style="width:80px;height:80px;border:none;outline:none;cursor:pointer;">
+                <br>
+                <input type="text" id="colorPickerHex" style="margin-top:12px;width:110px;text-align:center;font-size:16px;border:1px solid #ccc;border-radius:6px;padding:6px;">
+                <br>
+                <button class="btn" id="colorPickerOk" style="margin-top:18px;">OK</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    modal.style.display = "flex";
+    modal.querySelector("#colorPickerTitle").textContent = title;
+    const input = modal.querySelector("#colorPickerInput");
+    const hex = modal.querySelector("#colorPickerHex");
+    input.value = defaultColor;
+    hex.value = defaultColor;
+    input.oninput = function () {
+        hex.value = this.value;
+    };
+    hex.oninput = function () {
+        if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(this.value)) {
+            input.value = this.value;
+        }
+    };
+    function closeModal() {
+        modal.style.display = "none";
+    }
+    modal.querySelector("#colorPickerClose").onclick = closeModal;
+    modal.querySelector("#colorPickerOk").onclick = function () {
+        closeModal();
+        onPick(input.value);
+    };
+    // Close on click outside
+    function outsideHandler(e) {
+        if (e.target === modal) {
+            closeModal();
+            document.removeEventListener("mousedown", outsideHandler);
+        }
+    }
+    setTimeout(() => {
+        document.addEventListener("mousedown", outsideHandler);
+    }, 0);
+}
+
+// Restore note background color when opening a note
+const origOpenNote = openNote;
+window.openNote = function(id) {
+    origOpenNote(id);
+    const note = notes.find(n => n.id === id);
+    const noteArea = document.getElementById("noteArea");
+    if (note && note.bgColor) {
+        noteArea.style.background = note.bgColor;
+    } else {
+        noteArea.style.background = "#fff";
+    }
+};
+    window.addEventListener("DOMContentLoaded", function () {
+        // Show message if no note is selected
+        function updateNoteMessage() {
+            const noteText = document.getElementById("noteText");
+            const noteArea = document.getElementById("noteArea");
+            if (!currentNoteId) {
+                noteText.textContent = "Please select a note or create a note";
+                noteArea.innerHTML = "";
+            }
+        }
+        updateNoteMessage();
+
+        // Patch openNote and clearNoteArea to update message
+        const origOpenNote = openNote;
+        window.openNote = function(id) {
+            origOpenNote(id);
+            updateNoteMessage();
+        };
+        const origClearNoteArea = clearNoteArea;
+        window.clearNoteArea = function() {
+            origClearNoteArea();
+            updateNoteMessage();
+        };
+    });
+
+    window.addEventListener("DOMContentLoaded", function () {
+        // Restore selected note from sessionStorage if available
+        const lastNoteId = sessionStorage.getItem("selectedNoteId");
+        if (lastNoteId && notes.some(n => n.id === lastNoteId)) {
+            openNote(lastNoteId);
+        }
+    });
+
+    // Save selected note to sessionStorage whenever a note is opened
+    const origOpenNoteForSession = openNote;
+    window.openNote = function(id) {
+        sessionStorage.setItem("selectedNoteId", id);
+        origOpenNoteForSession(id);
+    };
+
+    (function () {
+        // Font size controls
+        const fontSizeInputs = document.querySelectorAll("#fontSize");
+        const noteArea = document.getElementById("noteArea");
+        const decreaseBtn = document.getElementById("decreaseSize");
+        const increaseBtn = document.getElementById("addSize");
+
+        function setFontSize(size) {
+            noteArea.focus();
+            const sel = window.getSelection();
+            if (sel && sel.rangeCount > 0 && !sel.isCollapsed && noteArea.contains(sel.anchorNode)) {
+                let sz = Math.max(1, Math.min(7, Math.round((size - 8) / 8) + 1));
+                document.execCommand("fontSize", false, sz);
+                Array.from(noteArea.querySelectorAll("font[size]")).forEach(font => {
+                    font.outerHTML = `<span style="font-size:${size}px">${font.innerHTML}</span>`;
+                });
+            } else {
+                let html = noteArea.innerHTML;
+                html = html.replace(/<span style="font-size:[^"]*">([\s\S]*?)<\/span>/gi, '$1');
+                noteArea.innerHTML = `<span style="font-size:${size}px">${html}</span>`;
+            }
+            fontSizeInputs.forEach(input => input.value = size);
+            if (typeof currentNoteId !== "undefined" && currentNoteId) {
+                const note = notes.find(n => n.id === currentNoteId);
+                if (note) {
+                    note.content = noteArea.innerHTML;
+                    saveNotes();
+                }
+            }
+        }
+
+        function getCurrentFontSize() {
+            let sel = window.getSelection();
+            if (sel && sel.rangeCount > 0) {
+                let node = sel.anchorNode;
+                if (node && node.nodeType === 3) node = node.parentNode;
+                if (node && node.style && node.style.fontSize) {
+                    return parseInt(node.style.fontSize) || 18;
+                }
+            }
+            let span = noteArea.querySelector("span[style*='font-size']");
+            if (span) {
+                let m = span.style.fontSize.match(/\d+/);
+                if (m) return parseInt(m[0]);
+            }
+            return 18;
+        }
+
+        fontSizeInputs.forEach(input => {
+            input.addEventListener("change", function () {
+                let size = parseInt(this.value) || 18;
+                size = Math.max(8, Math.min(100, size));
+                setFontSize(size);
+            });
+        });
+
+        if (decreaseBtn) {
+            decreaseBtn.onclick = function () {
+                let size = getCurrentFontSize();
+                size = Math.max(8, size - 1);
+                setFontSize(size);
+            };
+        }
+        if (increaseBtn) {
+            increaseBtn.onclick = function () {
+                let size = getCurrentFontSize();
+                size = Math.min(100, size + 1);
+                setFontSize(size);
+            };
+        }
+
+        // Alignment
+        function align(cmd) {
+            noteArea.focus();
+            document.execCommand(cmd, false, null);
+        }
+        // Bulleted/numbered lists
+        function list(cmd) {
+            noteArea.focus();
+            document.execCommand(cmd, false, null);
+
+            // Ensure correct list style and structure
+            if (cmd === "insertUnorderedList") {
+                // Replace any <u> or incorrect tags with <ul><li>
+                noteArea.innerHTML = noteArea.innerHTML
+                    .replace(/<u>(.*?)<\/u>/gi, '<ul><li>$1</li></ul>')
+                    .replace(/<li>(.*?)<\/li>(?!<\/ul>)/gi, '<ul><li>$1</li></ul>');
+                // Set list-style-type: disc for all <ul>
+                const uls = noteArea.querySelectorAll("ul");
+                uls.forEach(ul => {
+                    ul.style.listStyleType = "disc";
+                    // Ensure all children are <li>
+                    Array.from(ul.childNodes).forEach(child => {
+                        if (child.nodeType === 1 && child.tagName !== "LI") {
+                            const li = document.createElement("li");
+                            li.innerHTML = child.innerHTML || child.textContent;
+                            ul.replaceChild(li, child);
+                        }
+                    });
+                });
+            }
+            if (cmd === "insertOrderedList") {
+                // Replace any <ol> without <li> or incorrect tags
+                noteArea.innerHTML = noteArea.innerHTML
+                    .replace(/<o(l|L)>(.*?)<\/o(l|L)>/gi, '<ol><li>$2</li></ol>')
+                    .replace(/<li>(.*?)<\/li>(?!<\/ol>)/gi, '<ol><li>$1</li></ol>');
+                // Set list-style-type: decimal for all <ol>
+                const ols = noteArea.querySelectorAll("ol");
+                ols.forEach(ol => {
+                    ol.style.listStyleType = "decimal";
+                    // Ensure all children are <li>
+                    Array.from(ol.childNodes).forEach(child => {
+                        if (child.nodeType === 1 && child.tagName !== "LI") {
+                            const li = document.createElement("li");
+                            li.innerHTML = child.innerHTML || child.textContent;
+                            ol.replaceChild(li, child);
+                        }
+                    });
+                });
+            }
+        }
+        // Left-to-right/right-to-left
+        function setDir(dir) {
+            noteArea.focus();
+            const sel = window.getSelection();
+            if (sel && sel.rangeCount > 0 && !sel.isCollapsed && noteArea.contains(sel.anchorNode)) {
+                document.execCommand("insertHTML", false, `<span dir="${dir}">${sel.toString()}</span>`);
+            } else {
+                noteArea.setAttribute("dir", dir);
+            }
+        }
+        // Subscript/superscript/strike/code block
+        function formatSpecial(cmd, arg) {
+            noteArea.focus();
+            if (cmd === "formatBlock" && arg === "pre") {
+                document.execCommand("formatBlock", false, "pre");
+            } else {
+                document.execCommand(cmd, false, null);
+            }
+        }
+
+        // Attach handlers to toolbar icons
+        document.querySelectorAll(".ri-align-left").forEach(el => {
+            el.onclick = () => align("justifyLeft");
+        });
+        document.querySelectorAll(".ri-align-center").forEach(el => {
+            el.onclick = () => align("justifyCenter");
+        });
+        document.querySelectorAll(".ri-align-right").forEach(el => {
+            el.onclick = () => align("justifyRight");
+        });
+        document.querySelectorAll(".ri-list-unordered").forEach(el => {
+            el.onclick = () => list("insertUnorderedList");
+        });
+        document.querySelectorAll(".ri-list-ordered").forEach(el => {
+            el.onclick = () => list("insertOrderedList");
+        });
+        document.querySelectorAll(".ri-arrow-left-right-line").forEach(el => {
+            el.onclick = () => setDir("ltr");
+        });
+        document.querySelectorAll(".ri-arrow-right-line").forEach(el => {
+            el.onclick = () => setDir("rtl");
+        });
+        document.querySelectorAll(".ri-subscript").forEach(el => {
+            el.onclick = () => formatSpecial("subscript");
+        });
+        document.querySelectorAll(".ri-superscript").forEach(el => {
+            el.onclick = () => formatSpecial("superscript");
+        });
+        document.querySelectorAll(".ri-strikethrough").forEach(el => {
+            el.onclick = () => formatSpecial("strikeThrough");
+        });
+        document.querySelectorAll(".ri-code-s-slash-line").forEach(el => {
+            el.onclick = () => {
+                const noteArea = document.getElementById("noteArea");
+                noteArea.focus();
+                const sel = window.getSelection();
+                const isDark = document.body.classList.contains("dark");
+                const codeBg = isDark ? "#2a003a" : "#f3f3f3";
+                const codeColor = isDark ? "#fff" : "#222";
+                const codeBorder = isDark ? "#a050e0" : "#a050e0";
+                const codeBlockStyle = `background:${codeBg};border-radius:6px;padding:8px 12px;font-family:monospace;font-size:16px;white-space:pre-wrap;border-top:3px solid ${codeBorder};margin:8px 0;color:${codeColor};`;
+
+                if (sel && sel.rangeCount > 0 && !sel.isCollapsed && noteArea.contains(sel.anchorNode)) {
+                    // Insert selected text as a styled code block
+                    const selectedText = sel.toString();
+                    document.execCommand(
+                        "insertHTML",
+                        false,
+                        `<pre style="${codeBlockStyle}">${selectedText}</pre>`
+                    );
+                } else {
+                    // Insert an empty code block with style
+                    document.execCommand(
+                        "insertHTML",
+                        false,
+                        `<pre style="${codeBlockStyle}"></pre>`
+                    );
+                }
+                // After inserting, update all code blocks to match theme
+                updateCodeBlockStyles();
+            };
+        });
+
+        // Update all code blocks in the editor to match the current theme
+        function updateCodeBlockStyles() {
+            const noteArea = document.getElementById("noteArea");
+            const isDark = document.body.classList.contains("dark");
+            const codeBg = isDark ? "#2a003a" : "#f3f3f3";
+            const codeColor = isDark ? "#fff" : "#222";
+            const codeBorder = isDark ? "#a050e0" : "#a050e0";
+            const codeBlockStyle = `background:${codeBg};border-radius:6px;padding:8px 12px;font-family:monospace;font-size:16px;white-space:pre-wrap;border-top:3px solid ${codeBorder};margin:8px 0;color:${codeColor};`;
+            noteArea.querySelectorAll("pre").forEach(pre => {
+                pre.style.background = codeBg;
+                pre.style.borderRadius = "6px";
+                pre.style.padding = "8px 12px";
+                pre.style.fontFamily = "monospace";
+                pre.style.fontSize = "16px";
+                pre.style.whiteSpace = "pre-wrap";
+                pre.style.borderTop = `3px solid ${codeBorder}`;
+                pre.style.margin = "8px 0";
+                pre.style.color = codeColor;
+            });
+        }
+
+        // Update code block styles when theme changes
+        const themeObserver = new MutationObserver(updateCodeBlockStyles);
+        themeObserver.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+        window.addEventListener("DOMContentLoaded", updateCodeBlockStyles);
+
+        // Also support global format() for bold/italic/underline etc.
+        window.changeFontSize = function () {
+            let size = parseInt(document.querySelector("#fontSize").value) || 18;
+            setFontSize(size);
+        };
+    })();
+        function applyTheme(theme) {
+            if (theme === "system") {
+                const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                document.body.classList.toggle("dark", prefersDark);
+            } else {
+                document.body.classList.toggle("dark", theme === "dark");
+            }
+        }
+
+        function loadSettings() {
+            const theme = localStorage.getItem("theme") || "system";
+            const sidebarCollapseWidth = localStorage.getItem("sidebarCollapseWidth") || "992";
+            document.getElementById("theme").value = theme;
+            if (document.getElementById("sidebarCollapseWidth")) {
+                document.getElementById("sidebarCollapseWidth").value = sidebarCollapseWidth;
+                updateSidebarCollapseWidth(sidebarCollapseWidth);
+            }
+            applyTheme(theme);
+        }
+
+        function changeTheme() {
+            const theme = document.getElementById("theme").value;
+            localStorage.setItem("theme", theme);
+            applyTheme(theme);
+        }
+
+        // Listen for system theme changes if "system" is selected
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
+            const theme = localStorage.getItem("theme") || "system";
+            if (theme === "system") applyTheme("system");
+        });
+      
+     
+
+        // Settings modal open/close
+        document.getElementById("settingsBtn").onclick = () => {
+            showModal("settingsModal");
+        };
+        document.getElementById("settingsIcon").onclick = () => {
+            showModal("settingsModal");
+        };
+        document.getElementById("closeModal").onclick = () => {
+            hideModal("settingsModal");
+        };
+
+        // Initial load
+        window.addEventListener("DOMContentLoaded", loadSettings);
+
+
+        document.getElementById("overflowToolbarMenu").onclick = function (e) {
+            e.stopPropagation();
+            const overflow = document.querySelector(".overflow-toolbar");
+            const items1065 = document.querySelector(".items-show-1065");
+            if (!overflow) return;
+            // Toggle visibility
+            if (overflow.style.display === "flex") {
+            overflow.style.display = "none";
+            if (items1065) items1065.style.display = "none";
+            } else {
+            overflow.style.display = "flex";
+            if (items1065) items1065.style.display = "flex";
+            // Hide on click outside
+            function hideOverflow(ev) {
+                if (!overflow.contains(ev.target) && ev.target !== e.target) {
+                overflow.style.display = "none";
+                if (items1065) items1065.style.display = "none";
+                document.removeEventListener("mousedown", hideOverflow);
+                }
+            }
+            setTimeout(() => {
+                document.addEventListener("mousedown", hideOverflow);
+            }, 0);
+            }
+        };
+
+    document.getElementById("collapseSSidebarIcon").onclick = function () {
+        // Collapse sidebar
+        const sidebar = document.querySelector(".sidebar");
+        sidebar.style.display = "none";
+    
+        // Shift content and topbar left
+        document.querySelector(".topbar").style.left = "0";
+        document.querySelector(".content > div[style*='position: fixed']").style.left = "0";
+    
+        // Move note title a bit right to avoid overlap with menu button
+        document.getElementById("noteText").style.marginLeft = "48px";
+    
+        // Show menu button (hamburger)
+        const menuBtn = document.querySelector(".menu-btn");
+        menuBtn.style.display = "block";
+    };
+
+    // Show sidebar when menu icon is clicked
+    document.querySelector(".menu-btn").onclick = function () {
+        const sidebar = document.querySelector(".sidebar");
+        sidebar.style.display = "flex";
+        document.querySelector(".topbar").style.left = "260px";
+        document.querySelector(".content > div[style*='position: fixed']").style.left = "260px";
+        document.getElementById("noteText").style.marginLeft = "0";
+        this.style.display = "none";
+    };
+
+    // On resize, reset sidebar/menu-btn visibility
+    window.addEventListener("resize", function () {
+        const sidebar = document.querySelector(".sidebar");
+        const menuBtn = document.querySelector(".menu-btn");
+        if (window.innerWidth > 992) {
+            sidebar.style.display = "";
+            menuBtn.style.display = "none";
+            document.querySelector(".topbar").style.left = "260px";
+            document.querySelector(".content > div[style*='position: fixed']").style.left = "260px";
+            document.getElementById("noteText").style.marginLeft = "0";
+        } else {
+            if (sidebar.style.display !== "flex") {
+                menuBtn.style.display = "block";
+                document.querySelector(".topbar").style.left = "0";
+                document.querySelector(".content > div[style*='position: fixed']").style.left = "0";
+                document.getElementById("noteText").style.marginLeft = "48px";
+            }
+        }
+    });
+
+
+
+    function updateShareTextVisibility() {
+        const noteArea = document.getElementById("noteArea");
+        const shareText = document.querySelector(".share-text");
+        if (!noteArea || !shareText) return;
+        // Get computed width (may be px or %)
+        const width = noteArea.offsetWidth;
+        if (width <= 500) {
+            shareText.style.display = "none";
+        } else {
+            shareText.style.display = "";
+        }
+    }
+
+    // Initial check and on resize
+    window.addEventListener("resize", updateShareTextVisibility);
+    window.addEventListener("DOMContentLoaded", updateShareTextVisibility);
+    updateShareTextVisibility();
+
+
+    // Show modal
+    function showModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+        modal.style.display = "flex";
+        // Add click-outside handler
+        function outsideHandler(e) {
+            if (e.target === modal) {
+                modal.style.display = "none";
+                document.removeEventListener("mousedown", outsideHandler);
+            }
+        }
+        // Remove any previous handler to avoid duplicates
+        document.removeEventListener("mousedown", outsideHandler);
+        setTimeout(() => {
+            document.addEventListener("mousedown", outsideHandler);
+        }, 0);
+    }
+
+    // Hide modal utility
+    function hideModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) modal.style.display = "none";
+    }
+
+    // Open add note modal
+    document.getElementById("addNote").onclick = () => {
+        showModal("addNewNote");
+        document.getElementById("noteTitle").value = "";
+        document.getElementById("noteTitle").focus();
+    };
+
+    // Close modal on close button
+    document.getElementById("closeModal").onclick = () => {
+        hideModal("addNewNote");
+    };
+
+    document.querySelector(".menu-btn").onclick = function () {
+        const sidebar = document.querySelector(".sidebar");
+        if (window.innerWidth > 992) {
+            // On large screens, just show sidebar and hide menu button, no overlay
+            sidebar.style.display = "flex";
+            sidebar.style.zIndex = "";
+            let overlay = document.getElementById("sidebarOverlay");
+            if (overlay) overlay.remove();
+            this.style.display = "none";
+            document.querySelector(".topbar").style.left = "260px";
+            document.querySelector(".content > div[style*='position: fixed']").style.left = "260px";
+            document.getElementById("noteText").style.marginLeft = "0";
+            return;
+        }
+        // On small screens, show overlay
+        // Create overlay if not exists
+        let overlay = document.getElementById("sidebarOverlay");
+        if (!overlay) {
+            overlay = document.createElement("div");
+            overlay.id = "sidebarOverlay";
+            overlay.style = `
+                position:fixed;
+                top:0;left:0;width:100vw;height:100vh;
+                background:rgba(0,0,0,0.25);
+                z-index:9998;
+                display:block;
+            `;
+            overlay.onclick = function () {
+                sidebar.style.display = "none";
+                overlay.remove();
+            };
+            document.body.appendChild(overlay);
+        }
+        sidebar.style.display = "block";
+        sidebar.style.zIndex = "9999";
+        overlay.style.display = "block";
+    };
+
+    // Hide sidebar/overlay on resize if > 992px
+    window.addEventListener("resize", function () {
+        if (window.innerWidth > 992) {
+            document.querySelector(".sidebar").style.display = "";
+            let overlay = document.getElementById("sidebarOverlay");
+            if (overlay) overlay.remove();
+        }
+    });
+
+    // Hide sidebar/overlay when selecting a note (on small screens)
+    document.getElementById("notesList").addEventListener("click", function (e) {
+        // Only close if a note is selected and sidebar is visible (mobile)
+        if (window.innerWidth <= 992) {
+            const sidebar = document.querySelector(".sidebar");
+            let overlay = document.getElementById("sidebarOverlay");
+            sidebar.style.display = "none";
+            if (overlay) overlay.remove();
+        }
+    });
+
+    function showToast(message, duration = 2500) {
+        let toast = document.getElementById("toast");
+        if (!toast) {
+            toast = document.createElement("div");
+            toast.id = "toast";
+            toast.style = `
+                position:fixed;
+                bottom:40px;
+                left:50%;
+                transform:translateX(-50%);
+                background:#222;
+                color:#fff;
+                padding:14px 28px;
+                border-radius:8px;
+                font-size:16px;
+                z-index:99999;
+                box-shadow:0 2px 8px rgba(0,0,0,0.12);
+                opacity:0;
+                pointer-events:none;
+                transition:opacity 0.3s;
+            `;
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        toast.style.opacity = "1";
+        setTimeout(() => {
+            toast.style.opacity = "0";
+        }, duration);
+    }
+
+    function confirmBox(message, onYes, onNo) {
+        let modal = document.getElementById("confirmModal");
+        if (!modal) {
+            modal = document.createElement("div");
+            modal.id = "confirmModal";
+            modal.style = `
+                position:fixed;
+                top:0;left:0;width:100vw;height:100vh;
+                background:rgba(0,0,0,0.35);
+                display:flex;align-items:center;justify-content:center;
+                z-index:100000;
+            `;
+            modal.innerHTML = `
+                <div id="confirmModalContent" style="background:#fff;padding:28px 32px;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.13);min-width:260px;max-width:90vw;text-align:center;">
+                    <div id="confirmMsg" style="margin-bottom:22px;font-size:17px;"></div>
+                    <button id="confirmYes" class="btn" style="margin-right:12px;">Yes</button>
+                    <button id="confirmNo" class="btn" style="background:#eee;color:#222;">No</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        // Apply dark mode if needed
+        function applyConfirmModalTheme() {
+            const isDark = document.body.classList.contains("dark");
+            const modalContent = modal.querySelector("#confirmModalContent");
+            if (isDark) {
+                modalContent.style.background = "#1a002a";
+                modalContent.style.color = "#f2f2f2";
+                modalContent.querySelector("#confirmNo").style.background = "#2a003a";
+                modalContent.querySelector("#confirmNo").style.color = "#fff";
+            } else {
+                modalContent.style.background = "#fff";
+                modalContent.style.color = "";
+                modalContent.querySelector("#confirmNo").style.background = "#eee";
+                modalContent.querySelector("#confirmNo").style.color = "#222";
+            }
+        }
+        applyConfirmModalTheme();
+        // Update theme if toggled while open
+        const observer = new MutationObserver(applyConfirmModalTheme);
+        observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+        function cleanupObserver() {
+            observer.disconnect();
+        }
+
+        modal.querySelector("#confirmMsg").textContent = message;
+        modal.style.display = "flex";
+        const yesBtn = modal.querySelector("#confirmYes");
+        const noBtn = modal.querySelector("#confirmNo");
+        function cleanup() {
+            modal.style.display = "none";
+            yesBtn.onclick = null;
+            noBtn.onclick = null;
+            cleanupObserver();
+        }
+        yesBtn.onclick = () => {
+            cleanup();
+            if (onYes) onYes();
+        };
+        noBtn.onclick = () => {
+            cleanup();
+            if (onNo) onNo();
+        };
+    }
+
+    let notes = JSON.parse(localStorage.getItem("notes") || "[]");
+    let currentNoteId = null;
+
+    // Render notes in sidebar
+    function renderNotes(filter = "") {
+        const notesList = document.getElementById("notesList");
+        notesList.innerHTML = "";
+        let filtered = notes.filter(n => n.title.toLowerCase().includes(filter.toLowerCase()));
+        filtered.forEach(note => {
+            const div = document.createElement("div");
+            div.className = "note-item";
+            div.style = "padding:10px 8px; border-radius:6px; margin-bottom:6px; cursor:pointer; display:flex; align-items:center; justify-content:space-between; background:" + (note.id === currentNoteId ? "#e6e6ff" : "transparent");
+            div.innerHTML = `
+                <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${note.title}">${note.title}</span>
+                <i class="ri-more-2-fill note-more" data-id="${note.id}" style="margin-left:8px;"></i>
+            `;
+            div.onclick = (e) => {
+                if (e.target.classList.contains("note-more")) return;
+                openNote(note.id);
+            };
+            notesList.appendChild(div);
+        });
+    }
+    function openNote(id) {
+        const note = notes.find(n => n.id === id);
+        if (!note) return;
+        currentNoteId = id;
+        document.getElementById("noteText").textContent = note.title;
+        document.getElementById("noteArea").innerHTML = note.content;
+        renderNotes(document.getElementById("searchNotes").value);
+    }
+    function saveNotes() {
+        localStorage.setItem("notes", JSON.stringify(notes));
+    }
+    function clearNoteArea() {
+        document.getElementById("noteText").textContent = "";
+        document.getElementById("noteArea").innerHTML = "";
+        currentNoteId = null;
+    }
+    document.getElementById("addNote").onclick = () => {
+        document.getElementById("addNewNote").style.display = "flex";
+        document.getElementById("noteTitle").value = "";
+        document.getElementById("noteTitle").focus();
+    };
+    document.getElementById("closeModal").onclick = () => {
+        document.getElementById("addNewNote").style.display = "none";
+    };
+    document.getElementById("saveNote").onclick = () => {
+        const title = document.getElementById("noteTitle").value.trim();
+        if (!title) return showToast("Please enter a note title.");
+        const id = Date.now().toString();
+        notes.unshift({ id, title, content: "" });
+        saveNotes();
+        renderNotes();
+        document.getElementById("addNewNote").style.display = "none";
+        openNote(id);
+    };
+    document.getElementById("searchNotes").oninput = function() {
+        renderNotes(this.value);
+    };
+    document.getElementById("noteArea").addEventListener("input", function() {
+        if (!currentNoteId) return;
+        const note = notes.find(n => n.id === currentNoteId);
+        if (note) {
+            note.content = this.innerHTML;
+            saveNotes();
+        }
+    });
+    document.addEventListener("click", function(e) {
+        if (e.target.classList.contains("note-more")) {
+            showNoteMenu(e.target.dataset.id, e.target);
+        }
+    });
+    function showNoteMenu(noteId, anchor) {
+        let menu = document.getElementById("noteMenu");
+        if (menu) menu.remove();
+        menu = document.createElement("div");
+        menu.id = "noteMenu";
+        menu.style = "position:absolute;z-index:9999;background:#fff;border:1px solid #ccc;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08);padding:8px 0;min-width:140px;";
+        menu.innerHTML = `
+            <div class="menu-item" data-action="share" style="padding:8px 18px;cursor:pointer;display:flex;align-items:center;gap:8px;"><i class="ri-user-add-line"></i>Share</div>
+            <div class="menu-item" data-action="rename" style="padding:8px 18px;cursor:pointer;display:flex;align-items:center;gap:8px;"><i class="ri-edit-2-line"></i>Rename</div>
+            <div class="menu-item" data-action="history" style="padding:8px 18px;cursor:pointer;display:flex;align-items:center;gap:8px;"><i class="ri-history-line"></i>Version History</div>
+            <div class="menu-item" data-action="print" style="padding:8px 18px;cursor:pointer;display:flex;align-items:center;gap:8px;"><i class="ri-printer-line"></i>Print</div>
+            <div class="menu-item" data-action="delete" style="padding:8px 18px;cursor:pointer;display:flex;align-items:center;gap:8px;color:#d00;"><i class="ri-delete-bin-line"></i>Delete</div>
+        `;
+        document.body.appendChild(menu);
+        // Position menu
+        const rect = anchor.getBoundingClientRect();
+        menu.style.top = (window.scrollY + rect.bottom + 2) + "px";
+        menu.style.left = (window.scrollX + rect.left) + "px";
+        // Remove menu on click outside
+        setTimeout(() => {
+            document.addEventListener("mousedown", hideMenu, { once: true });
+        }, 10);
+        function hideMenu(ev) {
+            if (!menu.contains(ev.target)) menu.remove();
+        }
+
+        document.addEventListener("click", (ev) => {
+            if (!menu.contains(ev.target) && ev.target !== anchor) {
+                menu.remove();
+            }
+        });
+
+        // Handle menu actions
+        menu.onclick = function(ev) {
+            const action = ev.target.closest(".menu-item")?.dataset.action;
+            if (!action) return;
+            menu.remove();
+            switch (action) {
+                case "share":
+                    // Share this note
+                    const note = notes.find(n => n.id === noteId);
+                    if (!note) return;
+                    const url = new URL(window.location.href.split("#")[0]);
+                    url.searchParams.set("sharedTitle", encodeURIComponent(note.title));
+                    url.searchParams.set("sharedContent", encodeURIComponent(note.content));
+                    const shareData = {
+                        title: note.title,
+                        text: note.title,
+                        url: url.toString()
+                    };
+                    if (navigator.share) {
+                        navigator.share(shareData).then(() => {
+                            showToast("Share dialog opened.");
+                        }).catch(() => {
+                            showToast("Share cancelled.");
+                        });
+                    } else {
+                        navigator.clipboard.writeText(url.toString());
+                        showToast("Share link copied to clipboard.");
+                    }
+                    break;
+                case "rename":
+                    // Rename note
+                    const noteToRename = notes.find(n => n.id === noteId);
+                    if (!noteToRename) return;
+                    let renameModal = document.getElementById("renameNoteModal");
+                    if (!renameModal) {
+                        renameModal = document.createElement("div");
+                        renameModal.id = "renameNoteModal";
+                        renameModal.className = "modal";
+                        renameModal.innerHTML = `
+                            <div class="modal-content">
+                                <div class="close" id="closeRenameModal">&times;</div>
+                                <h2>Rename Note</h2>
+                                <input type="text" id="renameNoteInput" style="width:100%;margin-bottom:12px;" />
+                                <button class="btn" id="renameNoteSaveBtn">Save</button>
+                            </div>
+                        `;
+                        document.body.appendChild(renameModal);
+                    }
+                    renameModal.style.display = "flex";
+                    const input = renameModal.querySelector("#renameNoteInput");
+                    input.value = noteToRename.title;
+                    input.focus();
+                    // Close modal handler
+                    function closeRenameModal() {
+                        renameModal.style.display = "none";
+                    }
+                    renameModal.querySelector("#closeRenameModal").onclick = closeRenameModal;
+                    // Save handler
+                    renameModal.querySelector("#renameNoteSaveBtn").onclick = function () {
+                        const newTitle = input.value.trim();
+                        if (!newTitle) {
+                            showToast("Please enter a note title.");
+                            return;
+                        }
+                        noteToRename.title = newTitle;
+                        saveNotes();
+                        renderNotes();
+                        if (currentNoteId === noteId) {
+                            document.getElementById("noteText").textContent = noteToRename.title;
+                        }
+                        closeRenameModal();
+                    };
+                    // Enter key submits
+                    input.onkeydown = function (ev) {
+                        if (ev.key === "Enter") {
+                            renameModal.querySelector("#renameNoteSaveBtn").click();
+                        }
+                    };
+                    // Click outside closes modal
+                    function outsideHandler(ev) {
+                        if (ev.target === renameModal) {
+                            closeRenameModal();
+                            document.removeEventListener("mousedown", outsideHandler);
+                        }
+                    }
+                    setTimeout(() => {
+                        document.addEventListener("mousedown", outsideHandler);
+                    }, 0);
+                    break;
+                case "history":
+                    showVersionHistory(noteId);
+                    break;
+                case "print":
+                    window.print();
+                    break;
+                case "delete":
+                    confirmBox("Delete this note?", () => {
+                        notes = notes.filter(n => n.id !== noteId);
+                        saveNotes();
+                        renderNotes();
+                        if (currentNoteId === noteId) {
+                            clearNoteArea();
+                        }
+                        showToast("Note deleted.");
+                    });
+                    break;
+            }
+        };
+    }
+    renderNotes();
+
+
+
+       (function () {
+  const noteArea = document.getElementById("noteArea");
+  const toolbarIcons = document.querySelectorAll(".bottom-note i");
+  let savedRange = null;
+
+  function isInNote(node) {
+    return node === noteArea || (node && noteArea.contains(node));
+  }
+
+  function saveSelection() {
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    const range = sel.getRangeAt(0);
+    if (isInNote(range.commonAncestorContainer)) {
+      savedRange = range.cloneRange(); // clone so DOM edits don't mutate it
+    }
+  }
+
+  function restoreSelection() {
+    if (!savedRange) return false;
+    const sel = window.getSelection();
+    noteArea.focus();
+    sel.removeAllRanges();
+    sel.addRange(savedRange);
+    return true;
+  }
+
+  // Keep selection from collapsing when clicking the toolbar
+  toolbarIcons.forEach((icon) => {
+    icon.addEventListener("pointerdown", (e) => {
+      e.preventDefault(); // don't let focus leave the editor
+    });
+    icon.addEventListener("mousedown", (e) => {
+      e.preventDefault(); // extra safety for older browsers
+    });
+  });
+
+  // Track selection changes inside the editor
+  document.addEventListener("selectionchange", saveSelection);
+  noteArea.addEventListener("keyup", saveSelection);
+  noteArea.addEventListener("mouseup", saveSelection);
+  noteArea.addEventListener("input", saveSelection);
+
+  // Global function used by existing onclick handlers
+  window.format = function (command) {
+    // If the click collapsed/cleared the selection, restore it
+    const sel = window.getSelection();
+    const hasRange = sel && sel.rangeCount > 0;
+    const inside =
+      hasRange && isInNote(sel.getRangeAt(0).commonAncestorContainer);
+
+    if (!inside) {
+      restoreSelection();
+    } else {
+      saveSelection(); // capture the latest selection state
+    }
+
+    // Only format if the (restored) selection/caret is inside the editor
+    const sel2 = window.getSelection();
+    const canExec =
+      sel2 && sel2.rangeCount > 0 &&
+      isInNote(sel2.getRangeAt(0).commonAncestorContainer);
+    if (!canExec) return;
+
+    // Apply the command (works for selection or caret)
+    document.execCommand(command, false, null);
+
+    // Re-save selection so repeat clicks keep working
+    saveSelection();
+  };
+})();
 </script>
+
+   
+</body>
+</html>
